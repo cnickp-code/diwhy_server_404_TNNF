@@ -1,3 +1,12 @@
+process.env.TZ = 'UCT'
+process.env.NODE_ENV = 'test'
+process.env.JWT_SECRET = 'test-jwt-secret'
+process.env.JWT_EXPIRY = '3m'
+
+require('dotenv').config()
+// add or to test db url
+process.env.TEST_DB_URL = process.env.TEST_DB_URL
+
 const { expect } = require('chai')
 const supertest = require('supertest')
 
