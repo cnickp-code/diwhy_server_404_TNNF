@@ -35,11 +35,50 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 }
 
 function seedUsers(db, users) {
-    // need to setup
+    const preppedUsers = users.map(user => {
+        let { id, ...newUser } = user;
+        newUser.password = bcrypt.hashSync(user.password, 12);
+
+        return newUser;
+    })
+    return db
+        .into('users')
+        .insert(preppedUsers)
+        .then(() => db.raw(`SELECT setval('users_id_seq', ?)`, [users[users.length - 1].id]))
 }
 
 function cleanTables(db) {
-    // need to setup
+    return db.transaction(trx =>
+        trx.raw(
+            `
+            TRUNCATE posting_applicants CASCADE;
+            TRUNCATE postings CASCADE;
+            TRUNCATE comments CASCADE;
+            TRUNCATE threads CASCADE;
+            TRUNCATE user_interests CASCADE;
+            TRUNCATE categories CASCADE;
+            TRUNCATE users CASCADE;
+            `
+        )
+            .then(() =>
+                Promise.all([
+                    trx.raw(`ALTER SEQUENCE posting_applicants_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE postings_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE comments_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE threads_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE user_interests_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE categories_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE users_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`SELECT setval('posting_applicants_id_seq', 0)`),
+                    trx.raw(`SELECT setval('postings_id_seq', 0)`),
+                    trx.raw(`SELECT setval('comments_id_seq', 0)`),
+                    trx.raw(`SELECT setval('threads_id_seq', 0)`),
+                    trx.raw(`SELECT setval('user_interests_id_seq', 0)`),
+                    trx.raw(`SELECT setval('categories_id_seq', 0)`),
+                    trx.raw(`SELECT setval('users_id_seq', 0)`),
+                ])
+            )
+    )
 }
 
 module.exports = {
