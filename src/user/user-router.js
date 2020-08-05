@@ -17,17 +17,26 @@ userRouter
 
         try {
             const passwordError = UserService.validatePassword(password)
-
             if(passwordError)
                 return res.status(400).json({ error: passwordError })
-
+            
+            const emailError = UserService.validateEmail(email)
+            if (emailError)
+                return res.status(400).json({ error: emailError })
+            
             const hasUserWithUserName = await UserService.hasUserWithUserName(
                 req.app.get('db'),
                 user_name
             )
-
             if (hasUserWithUserName)
                 return res.status(400).json({ error: `Username already taken` })
+
+            const hasUserWithEmail = await UserService.hasUserWithEmail(
+                req.app.get('db'),
+                email
+            )
+            if (hasUserWithEmail)
+                return res.status(400).json({ error: `Email already taken`})
 
             const hashedPassword = await UserService.hashPassword(password)
 

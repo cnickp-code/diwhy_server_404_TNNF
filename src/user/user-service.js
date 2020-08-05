@@ -2,12 +2,26 @@ const bcrypt = require('bcryptjs')
 
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
+const REGEX_EMAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 const UserService = {
     hasUserWithUserName(db, user_name) {
         return db('users')
             .where({ user_name })
             .first()
             .then(user => !!user)
+    },
+    hasUserWithEmail(db, email) {
+        return db('users')
+            .where({ email })
+            .first()
+            .then(user => !!user)
+    },
+    validateEmail(email) {
+        if (!REGEX_EMAIL.test(email)) {
+            return 'Email must be valid'
+        }
+        return null
     },
     insertUser(db, newUser) {
         return db

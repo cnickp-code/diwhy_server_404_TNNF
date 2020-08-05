@@ -3,7 +3,7 @@ CREATE TABLE users (
     user_name TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     email TEXT NOT NULL,
-    endorsements INT NOT NULL,
+    endorsements INT DEFAULT 0 NOT NULL,
     date_created TIMESTAMP DEFAULT now() NOT NULL,
     date_modified TIMESTAMP
 );

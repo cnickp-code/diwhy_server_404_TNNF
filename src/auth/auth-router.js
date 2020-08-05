@@ -23,7 +23,6 @@ authRouter
                 req.app.get('db'),
                 loginUser.email
             )
-
             if (!dbUser)
                 return res.status(400).json({
                     error: 'Incorrect email or password'
@@ -33,7 +32,6 @@ authRouter
                 loginUser.password,
                 dbUser.password
             )
-
             if (!compareMatch) 
                 return res.status(400).json({
                     error: 'Incorrect email or password'
@@ -44,7 +42,7 @@ authRouter
                 userId: dbUser.id,
                 username: dbUser.user_name
             }
-
+            
             res.send({
                 authToken: AuthService.createJwt(sub, payload)
             })
