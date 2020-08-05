@@ -34,11 +34,11 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     return `Bearer ${token}`
 }
 
-function seedUsers() {
+function seedUsers(db, users) {
     // need to setup
 }
 
-function cleanTables() {
+function cleanTables(db) {
     // need to setup
 }
 
@@ -47,4 +47,5 @@ module.exports = {
     makeUsersArray,
     makeAuthHeader,
     cleanTables,
+    seedUsers,
 }

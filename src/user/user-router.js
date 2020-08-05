@@ -29,7 +29,7 @@ userRouter
             if (hasUserWithUserName)
                 return res.status(400).json({ error: `Username already taken` })
 
-            const hashedPassword = await UserService.hashPasword(password)
+            const hashedPassword = await UserService.hashPassword(password)
 
             const newUser = {
                 username,
