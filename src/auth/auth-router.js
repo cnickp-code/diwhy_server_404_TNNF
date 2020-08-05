@@ -40,7 +40,7 @@ authRouter
             const sub = dbUser.user_name
             const payload = {
                 userId: dbUser.id,
-                username: dbUser.user_name
+                user_name: dbUser.user_name
             }
             
             res.send({

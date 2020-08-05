@@ -9,11 +9,13 @@ userRouter
     .post('/', jsonBodyParser, async (req, res, next) => {
         const { user_name, password, email } = req.body
 
-        for (const field of [])
+        for (const field of ['user_name', 'password', 'email']) {
             if (!req.body[field])
                 return res.status(400).json({
                     error: `Missing '${field}' in request body`
                 })
+        }
+
 
         try {
             const passwordError = UserService.validatePassword(password)

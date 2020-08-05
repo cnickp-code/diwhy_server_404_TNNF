@@ -27,7 +27,7 @@ describe('User Endpoints', function () {
         requiredFields.forEach(field => {
             const registerAttemptBody = {
                 user_name: 'test username',
-                password: 'test password',
+                password: 'testpassword',
                 email: 'test@email.com',
             }
 
