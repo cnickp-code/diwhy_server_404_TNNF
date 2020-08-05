@@ -19,7 +19,7 @@ authRouter
                 })
 
         try {
-            const dbUser = await AuthService.getUserWithUserName(
+            const dbUser = await AuthService.getUserWithEmail(
                 req.app.get('db'),
                 loginUser.email
             )
@@ -39,10 +39,10 @@ authRouter
                     error: 'Incorrect email or password'
                 })
 
-            const sub = dbUser.username
+            const sub = dbUser.user_name
             const payload = {
                 userId: dbUser.id,
-                username: dbUser.username
+                username: dbUser.user_name
             }
 
             res.send({
@@ -54,10 +54,10 @@ authRouter
     })
 
     .put(requireAuth, (req, res) => {
-        const sub = req.user.username
+        const sub = req.user.user_name
         const payload = {
             userId: req.user.id,
-            username: req.user.username
+            username: req.user.user_name
         }
 
         res.sendStatus({
