@@ -55,7 +55,7 @@ function cleanTables(db) {
             TRUNCATE postings CASCADE;
             TRUNCATE comments CASCADE;
             TRUNCATE threads CASCADE;
-            TRUNCATE user_interests CASCADE;
+            TRUNCATE users_interests CASCADE;
             TRUNCATE categories CASCADE;
             TRUNCATE users CASCADE;
             `
@@ -66,14 +66,14 @@ function cleanTables(db) {
                     trx.raw(`ALTER SEQUENCE postings_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE comments_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE threads_id_seq minvalue 0 START WITH 1`),
-                    trx.raw(`ALTER SEQUENCE user_interests_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`ALTER SEQUENCE users_interests_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE categories_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE users_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`SELECT setval('posting_applicants_id_seq', 0)`),
                     trx.raw(`SELECT setval('postings_id_seq', 0)`),
                     trx.raw(`SELECT setval('comments_id_seq', 0)`),
                     trx.raw(`SELECT setval('threads_id_seq', 0)`),
-                    trx.raw(`SELECT setval('user_interests_id_seq', 0)`),
+                    trx.raw(`SELECT setval('users_interests_id_seq', 0)`),
                     trx.raw(`SELECT setval('categories_id_seq', 0)`),
                     trx.raw(`SELECT setval('users_id_seq', 0)`),
                 ])
