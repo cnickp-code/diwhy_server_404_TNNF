@@ -72,7 +72,7 @@ describe('Auth Endpoints', function () {
                 { userId: testUser.id, name: testUser.name },
                 process.env.JWT_SECRET,
                 {
-                    subject: testUser.username,
+                    subject: testUser.user_name,
                     expiresIn: process.env.JWT_EXPIRY,
                     algorithm: 'HS256',
                 }

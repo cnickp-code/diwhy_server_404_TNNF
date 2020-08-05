@@ -13,13 +13,13 @@ function makeUsersArray() {
     return [
         {
             id: 1,
-            username: 'test-user-1',
+            user_name: 'test-user-1',
             email: 'testuser1@test.com',
             password: 'password',
         },
         {
             id: 2,
-            username: 'test-user-2',
+            user_name: 'test-user-2',
             email: 'testuser2@test.com',
             password: 'password',
         },
@@ -28,7 +28,7 @@ function makeUsersArray() {
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ userId: user.id }, secret, {
-        subject: user.username,
+        subject: user.user_name,
         algorithm: 'HS256',
     })
     return `Bearer ${token}`

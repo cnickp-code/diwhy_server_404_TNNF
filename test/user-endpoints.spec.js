@@ -19,15 +19,14 @@ describe('User Endpoints', function () {
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-
     describe(`POST /api/user`, () => {
         beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
-        const requiredFields = ['username', 'password', 'email']
+        const requiredFields = ['user_name', 'password', 'email']
 
         requiredFields.forEach(field => {
             const registerAttemptBody = {
-                username: 'test username',
+                user_name: 'test username',
                 password: 'test password',
                 email: 'test@email.com',
             }
@@ -46,7 +45,7 @@ describe('User Endpoints', function () {
 
         it(`responds 400 'Password be longer than 8 characters' when empty password`, () => {
             const userShortPassword = {
-                username: 'test username',
+                user_name: 'test username',
                 password: '1234567',
                 email: 'test@email.com',
             }
@@ -58,7 +57,7 @@ describe('User Endpoints', function () {
 
         it(`responds 400 'Password be less than 72 characters' when long password`, () => {
             const userLongPassword = {
-                username: 'test username',
+                user_name: 'test username',
                 password: '*'.repeat(73),
                 email: 'test@email.com',
             }
@@ -70,7 +69,7 @@ describe('User Endpoints', function () {
 
         it(`responds 400 error when password starts with spaces`, () => {
             const userPasswordStartsSpaces = {
-                username: 'test username',
+                user_name: 'test username',
                 password: ' 1Aa!2Bb@',
                 email: 'test@email.com',
             }
@@ -82,7 +81,7 @@ describe('User Endpoints', function () {
 
         it(`responds 400 error when password ends with spaces`, () => {
             const userPasswordEndsSpaces = {
-                username: 'test username',
+                user_name: 'test username',
                 password: '1Aa!2Bb@ ',
                 email: 'test@email.com',
             }
@@ -94,7 +93,7 @@ describe('User Endpoints', function () {
 
         it(`responds 400 'User name already taken' when username isn't unique`, () => {
             const duplicateUser = {
-                username: testUser.username,
+                user_name: testUser.user_name,
                 password: '11AAaa!!',
                 email: 'test@email.com',
             }
@@ -104,7 +103,7 @@ describe('User Endpoints', function () {
                 .expect(400, { error: `Username already taken` })
         })
 
-        describe(`Given a valid user`, () => {
+        describe.skip(`Given a valid user`, () => {
             // still need
         })
     })
