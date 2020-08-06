@@ -6,7 +6,7 @@ const helpers = require('./test-helpers');
 const { makeCategoriesArray, makeUsersArray } = require('./test-helpers');
 const { expect } = require('chai');
 
-describe.only('Categories Endpoints', () => {
+describe('Categories Endpoints', () => {
     let db;
 
     const testCategories = helpers.makeCategoriesArray();
