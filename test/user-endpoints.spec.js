@@ -103,8 +103,52 @@ describe('User Endpoints', function () {
                 .expect(400, { error: `Username already taken` })
         })
 
-        describe.skip(`Given a valid user`, () => {
-            // still need
+        describe.only(`Given a valid user`, () => {
+            it(`responds with 201, serialized user, storing bcrypted password`, () => {
+                const newUser = {
+                    user_name: 'test user_name',
+                    password: '11AAaa!!',
+                    email: 'test@test.com',
+                }
+                return supertest(app)
+                    .post('/api/user')
+                    .send(newUser)
+                    .expect(201)
+                    .expect(res => {
+                        expect(res.body).to.have.property('id')
+                        expect(res.body.user_name).to.eql(newUser.user_name)
+                        expect(res.body.email).to.eql(newUser.email)
+                        expect(res.body).to.not.have.property('password')
+                        expect(res.headers.location).to.eql(`/api/user/${res.body.id}`)
+
+                        const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                        const actualDate = new Date(res.body.date_created).toLocaleString()
+                        expect(actualDate).to.eql(expectedDate)
+                    })
+                    .expect(res =>
+                        db
+                            .from('users')
+                            .select('*')
+                            .where({ id: res.body.id })
+                            .first()
+                            .then(row => {
+                                expect(res.body.user_name).to.eql(newUser.user_name)
+                                expect(res.body.email).to.eql(newUser.email)
+                                expect(res.body).to.not.have.property('password')
+                                expect(res.headers.location).to.eql(`/api/user/${res.body.id}`)
+
+                                const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                                const actualDate = new Date(res.body.date_created).toLocaleString()
+                                expect(actualDate).to.eql(expectedDate)
+
+                                return bcrypt.compare(newUser.password, row.password)
+                            })
+                            .then(compareMatch => {
+                                expect(compareMatch).to.be.true
+                            })
+                    )
+
+            })
         })
     })
 })

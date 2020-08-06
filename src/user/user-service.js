@@ -51,9 +51,9 @@ const UserService = {
     serializeUser(user) {
         return {
             id: user.id,
-            username: user.user_name,
+            user_name: user.user_name,
             email: user.email,
-            date: user.date_created
+            date_created: user.date_created
         }
     }
 }

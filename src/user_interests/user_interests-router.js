@@ -23,4 +23,40 @@ interestsRouter
         }
     })
 
+    .post(jsonBodyParser, async (req, res, next) => {
+        try {
+            const { user_id, category_id } = req.body
+        const newInterest = { user_id, category_id }
+
+        const insertInterest = await UserInterestsService.insertUserInterest(
+            req.app.get('db'),
+            newInterest
+        )
+        
+        const interestById = await UserInterestsService.getUserInterestById(
+            req.app.get('db'),
+            insertInterest.id
+        )
+        res.send({
+            interestById
+        })
+        } catch(error) {
+            next(error)
+        }
+    })
+
+interestsRouter
+    .route('/:id')
+    .delete(async (req, res, next) => {
+        try {
+            await UserInterestsService.deleteUserInterest(
+            req.app.get('db'),
+            req.params.id
+        )
+        res.status(204).end()
+        } catch(error) {
+            next(error)
+        }
+    })
+
 module.exports = interestsRouter;
