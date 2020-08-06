@@ -41,6 +41,7 @@ authRouter
             const sub = dbUser.user_name
             const payload = {
                 userId: dbUser.id,
+                email: dbUser.email,
                 user_name: dbUser.user_name
             }
             
@@ -56,6 +57,7 @@ authRouter
         const sub = req.user.user_name
         const payload = {
             userId: req.user.id,
+            email: dbUser.email,
             username: req.user.user_name
         }
 
