@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const userRouter = require('./user/user-router')
 const authRouter = require('./auth/auth-router')
+const interestsRouter = require('./user_interests/user_interests-router')
 const categoriesRouter = require('./categories/categories-router')
 const threadsRouter = require('./threads/threads-router')
 
@@ -21,6 +22,7 @@ app.use(cors())
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/interests', interestsRouter)
 app.use('/api/categories', categoriesRouter)
 app.use('/api/threads', threadsRouter)
 
