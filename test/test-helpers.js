@@ -26,6 +26,27 @@ function makeUsersArray() {
     ]
 }
 
+function makeCategoriesArray() {
+    return [
+        {
+            id: 1,
+            name: 'Woodworking',
+        },
+        {
+            id: 2,
+            name: 'Needlecraft',
+        },
+        {
+            id: 3,
+            name: 'Metalworking',
+        },
+        {
+            id: 4,
+            name: 'Arts and Crafts', 
+        },
+    ]
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ userId: user.id }, secret, {
         subject: user.user_name,
@@ -84,6 +105,7 @@ function cleanTables(db) {
 module.exports = {
     makeKnexInstance,
     makeUsersArray,
+    makeCategoriesArray,
     makeAuthHeader,
     cleanTables,
     seedUsers,
