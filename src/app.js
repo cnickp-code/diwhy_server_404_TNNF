@@ -7,6 +7,7 @@ const { NODE_ENV } = require('./config')
 const userRouter = require('./user/user-router')
 const authRouter = require('./auth/auth-router')
 const categoriesRouter = require('./categories/categories-router')
+const threadsRouter = require('./threads/threads-router')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors())
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/categories', categoriesRouter)
+app.use('/api/threads', threadsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
