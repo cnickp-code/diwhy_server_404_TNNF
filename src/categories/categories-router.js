@@ -31,11 +31,13 @@ categoriesRouter
             .then(category => {
                 if(!category) {
                     return res.status(404).json({
-                        error: { message: 'Date item does not exist.' }
+                        error: { message: 'Item does not exist.' }
                     })
                 }
-                res.category = category;
+                res.status(200).json(CategoriesService.serializeCategoryItem(category));
             })
         
-        res.status(200).json(CategoriesService.serializeCategoryItem(res.category));
+        
     })
+
+module.exports = categoriesRouter;
