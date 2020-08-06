@@ -1,6 +1,7 @@
 const express = require('express')
 const AuthService = require('./auth-service')
 const { requireAuth } = require('../middleware/jwt-auth')
+const { updateUser } = require('./auth-service')
 
 const authRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -61,6 +62,39 @@ authRouter
         res.sendStatus({
             authToken: AuthService.createJwt(sub, payload)
         })
+    })
+
+    .patch(requireAuth, async (req, res, next) => {
+        try {
+            const { email, name, user_name } = req.body
+            const currUser = { email, name, user_name}
+            const dbUser = await AuthService.getUserWithEmail(
+                req.app.get('db'),
+                currUser.email
+            )
+            
+            await AuthService.updateUser(
+                req.app.get('db'),
+                dbUser.id,
+                {
+                    email: email,
+                    name: name,
+                    user_name: user_name
+                }
+                )
+            
+            const updatedUser = await AuthService.getUserWithEmail(
+                req.app.get('db'),
+                currUser.email
+            )
+            res.send({
+                email: updatedUser.email,
+                name: updatedUser.name,
+                user_name: updatedUser.user_name
+            })
+        } catch(error) {
+            next(error)
+        }
     })
 
 module.exports = authRouter
