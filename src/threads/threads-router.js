@@ -15,3 +15,5 @@ threadsRouter
 
 threadsRouter
     .route('/user/:user_id')
+
+module.exports = threadsRouter

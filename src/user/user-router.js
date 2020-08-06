@@ -52,7 +52,7 @@ userRouter
                 req.app.get('db'),
                 newUser
             )
-            console.log(UserService.serializeUser(user))
+            
             res
                 .status(201)
                 .location(path.posix.join(req.originalUrl, `/${user.id}`))
