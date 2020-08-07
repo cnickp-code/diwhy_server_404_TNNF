@@ -47,6 +47,35 @@ function makeCategoriesArray() {
     ]
 }
 
+function makeInterestsArray() {
+    return [
+        {
+            user_id: 1,
+            category_id: 1
+        },
+        {
+            user_id: 1,
+            category_id: 2
+        },
+        {
+            user_id: 1,
+            category_id: 3
+        }
+    ]
+}
+
+function seedUserInterests(db, interests) {
+    return db
+        .insert(interests)
+        .into('users_interests')
+}
+
+function seedCategories(db, categories) {
+    return db
+        .insert(categories)
+        .into('categories')
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ userId: user.id }, secret, {
         subject: user.user_name,
@@ -107,6 +136,9 @@ module.exports = {
     makeUsersArray,
     makeCategoriesArray,
     makeAuthHeader,
+    makeInterestsArray,
     cleanTables,
     seedUsers,
+    seedCategories,
+    seedUserInterests,
 }

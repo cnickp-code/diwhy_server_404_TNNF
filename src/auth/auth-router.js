@@ -57,7 +57,7 @@ authRouter
         const sub = req.user.user_name
         const payload = {
             userId: req.user.id,
-            email: dbUser.email,
+            email: req.user.email,
             username: req.user.user_name
         }
 
@@ -68,8 +68,8 @@ authRouter
 
     .patch(requireAuth, async (req, res, next) => {
         try {
-            const { email, name, user_name } = req.body
-            const currUser = { email, name, user_name}
+            const { email, user_name } = req.body
+            const currUser = { email, user_name}
             const dbUser = await AuthService.getUserWithEmail(
                 req.app.get('db'),
                 currUser.email
@@ -80,7 +80,6 @@ authRouter
                 dbUser.id,
                 {
                     email: email,
-                    name: name,
                     user_name: user_name
                 }
                 )
@@ -91,7 +90,6 @@ authRouter
             )
             res.send({
                 email: updatedUser.email,
-                name: updatedUser.name,
                 user_name: updatedUser.user_name
             })
         } catch(error) {
