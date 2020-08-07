@@ -2,7 +2,7 @@ const helpers = require('./test-helpers')
 const app = require('../src/app')
 const supertest = require('supertest')
 
-describe.only(`Interests endpoints`, () => {
+describe(`Interests endpoints`, () => {
     let db
 
     const testInterests = helpers.makeInterestsArray()
@@ -65,6 +65,64 @@ describe.only(`Interests endpoints`, () => {
                 .get('/api/interests')
                 .set('Authorization', helpers.makeAuthHeader(testUser))
                 .expect(testInterestsDetails)
+        })
+    })
+
+    describe(`POST /api/interests`, () => {
+        beforeEach('insert users', () => 
+            helpers.seedUsers(
+                db, 
+                testUsers
+            )
+        )
+
+        beforeEach('insert categories', () => 
+            helpers.seedCategories(
+                db,
+                testCategories
+            )
+        )
+
+        it('responds users', () => {
+            const newInterest = {
+                id: 4,
+                user_id: 1,
+                category_id: 4
+            }
+            return supertest(app)
+                .post('/api/interests')
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .send(newInterest)
+                .expect(200)
+        })
+    })
+
+    describe(`DELETE /api/interests/:id`, () => {
+        beforeEach('insert users', () => 
+            helpers.seedUsers(
+                db, 
+                testUsers
+            )
+        )
+
+        beforeEach('insert categories', () => 
+            helpers.seedCategories(
+                db,
+                testCategories
+            )
+        )
+
+        beforeEach('insert interests', () => 
+            helpers.seedUserInterests(
+                db,
+                testInterests
+            )
+        )
+
+        it('deletes interest responds with 204', () => {
+            return supertest(app)
+                .delete('/api/interests/1')
+                .expect(204)
         })
     })
 })

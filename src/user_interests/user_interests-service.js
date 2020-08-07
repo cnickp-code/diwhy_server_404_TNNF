@@ -46,6 +46,12 @@ const UserInterestsService = {
             user_id: interest.user_id,
             category: interest.name
         }
+    },
+    hasInterest(db, user_id, category_id) {
+        return db('users_interests')
+            .where({ user_id, category_id })
+            .first()
+            .then(interest => !!interest)
     }
 }
 
