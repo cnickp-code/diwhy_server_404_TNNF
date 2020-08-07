@@ -7,17 +7,17 @@ const jsonBodyParser = express.json()
 
 interestsRouter
     .route('/')
-    // .all(requireAuth)
+    .all(requireAuth)
     .get(async (req, res, next) => {
         try {
-            const interests = await UserInterestsService.getUserInterests(
-                req.app.get('db'),
-                req.user.id
-            )
-            res.json({
-                interests
-            })
-            next()
+            UserInterestsService.getUserInterests(req.app.get('db'), req.user.id)
+                .then(interests => {
+                    const newInterests = interests.map(interest => {
+                        return UserInterestsService.serializeInterestDetails(interest);
+                    })
+                    res.status(200).json(newInterests);
+                })
+                
         } catch (error) {
             next(error)
         }

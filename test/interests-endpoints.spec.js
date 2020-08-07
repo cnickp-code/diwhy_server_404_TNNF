@@ -1,7 +1,8 @@
 const helpers = require('./test-helpers')
 const app = require('../src/app')
+const supertest = require('supertest')
 
-describe.skip(`Interests endpoints`, () => {
+describe.only(`Interests endpoints`, () => {
     let db
 
     const testInterests = helpers.makeInterestsArray()
@@ -42,6 +43,28 @@ describe.skip(`Interests endpoints`, () => {
             )
         )
 
-        
+        it('should return user interests', () => {
+            const testInterestsDetails = [
+                {
+                    id: 1,
+                    user_id: 1,
+                    category: 'Woodworking'
+                },
+                {
+                    id: 2,
+                    user_id: 1,
+                    category: 'Needlecraft'
+                },
+                {
+                    id: 3,
+                    user_id: 1,
+                    category: 'Metalworking'
+                }
+            ]
+            return supertest(app)
+                .get('/api/interests')
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .expect(testInterestsDetails)
+        })
     })
 })

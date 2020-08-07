@@ -1,10 +1,17 @@
+
 const UserInterestsService = {
     getUserInterests(db, user_id) {
         return db
-            .select('*')
             .from('users_interests')
+            .join('categories', 'categories.id', 'category_id')
+            .select('*')
+            .select(
+                db.raw(
+                    '"users_interests"."id" AS "interests_id"'
+                )
+            )
             .where({ user_id })
-            .orderBy('id')
+            // .orderBy('id')
     },
     getUserInterestById(db, id) {
         return db
@@ -25,6 +32,20 @@ const UserInterestsService = {
         return db('users_interests')
             .where({ id })
             .delete()
+    },
+    serializeInterests(interest) {
+        return {
+            id: interest.id,
+            user_id: interest.user_id,
+            category_id: interest.category_id
+        }
+    },
+    serializeInterestDetails(interest) {
+        return {
+            id: interest.id,
+            user_id: interest.user_id,
+            category: interest.name
+        }
     }
 }
 
