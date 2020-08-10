@@ -37,7 +37,6 @@ categoriesRouter
                 res.status(200).json(CategoriesService.serializeCategoryItem(category));
             })
         
-        
     })
 
 module.exports = categoriesRouter;
