@@ -50,14 +50,17 @@ function makeCategoriesArray() {
 function makeInterestsArray() {
     return [
         {
+            id: 1,
             user_id: 1,
             category_id: 1
         },
         {
+            id: 2,
             user_id: 1,
             category_id: 2
         },
         {
+            id: 3,
             user_id: 1,
             category_id: 3
         }
@@ -106,7 +109,7 @@ function seedCategories(db, categories) {
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
-    const token = jwt.sign({ userId: user.id }, secret, {
+    const token = jwt.sign({ userId: user.id, email: user.email, user_name: user.user_name }, secret, {
         subject: user.user_name,
         algorithm: 'HS256',
     })

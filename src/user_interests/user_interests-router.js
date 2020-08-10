@@ -7,17 +7,17 @@ const jsonBodyParser = express.json()
 
 interestsRouter
     .route('/')
-    // .all(requireAuth)
+    .all(requireAuth)
     .get(async (req, res, next) => {
         try {
-            const interests = await UserInterestsService.getUserInterests(
-                req.app.get('db'),
-                req.user.id
-            )
-            res.json({
-                interests
-            })
-            next()
+            UserInterestsService.getUserInterests(req.app.get('db'), req.user.id)
+                .then(interests => {
+                    const newInterests = interests.map(interest => {
+                        return UserInterestsService.serializeInterestDetails(interest);
+                    })
+                    res.status(200).json(newInterests);
+                })
+                
         } catch (error) {
             next(error)
         }
@@ -28,6 +28,16 @@ interestsRouter
             const { user_id, category_id } = req.body
             const newInterest = { user_id, category_id }
 
+            const hasInterest = await UserInterestsService.hasInterest(
+                req.app.get('db'),
+                user_id,
+                category_id
+            )
+
+            if (hasInterest) {
+                return res.status(400).json({ error: 'User interest already exists' })
+            }
+
             const insertInterest = await UserInterestsService.insertUserInterest(
                 req.app.get('db'),
                 newInterest
@@ -37,9 +47,10 @@ interestsRouter
                 req.app.get('db'),
                 insertInterest.id
             )
-            res.send({
+
+            res.status(200).send(
                 interestById
-            })
+            )
         } catch (error) {
             next(error)
         }
@@ -49,6 +60,15 @@ interestsRouter
     .route('/:id')
     .delete(async (req, res, next) => {
         try {
+            const interestById = await UserInterestsService.getUserInterestById(
+                req.app.get('db'),
+                6
+            )
+            
+            if (interestById === []) {
+                return res.status(404).json({ error: 'User interest doesnt exist'})
+            }
+
             await UserInterestsService.deleteUserInterest(
                 req.app.get('db'),
                 req.params.id

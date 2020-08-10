@@ -103,7 +103,7 @@ describe('User Endpoints', function () {
                 .expect(400, { error: `Username already taken` })
         })
 
-        describe.only(`Given a valid user`, () => {
+        describe(`Given a valid user`, () => {
             it(`responds with 201, serialized user, storing bcrypted password`, () => {
                 const newUser = {
                     user_name: 'test user_name',
