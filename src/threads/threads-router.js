@@ -71,7 +71,7 @@ threadsRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        res.status.json(ThreadsService.serializeThread(thread));
+        res.status(200).json(ThreadsService.serializeThread(res.thread));
     })
     .delete(bodyParser, (req, res, next) => {
         const knex = req.app.get('db')
@@ -82,7 +82,25 @@ threadsRouter
             })
             .catch(next);
     })
-    .update()
+    .patch(bodyParser, (req, res, next) => {
+        const knex = req.app.get('db')
+        const { title, user_id, category, date_created, content } = req.body;
+        const { thread_id } = req.params;
+
+        let updatedThread = {
+            title,
+            user_id,
+            category,
+            date_created,
+            content
+        }
+
+        ThreadsService.updateThread(knex, thread_id, updatedThread)
+            .then(() => {
+                res.status(204).end();
+            })
+            .catch(next);
+    })
 
 threadsRouter
     .route('/category/:category_id')

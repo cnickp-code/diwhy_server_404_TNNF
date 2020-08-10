@@ -1,27 +1,35 @@
-const xss = require('xss') 
+const xss = require('xss')
 
 const ThreadsService = {
     getAllThreads(knex) {
         return knex
-            .select('*')
             .from('threads')
-            .orderBy('id')
+            .join('categories', 'categories.id', 'category')
+            .select('*')
+            .select(
+                knex.raw(
+                    'threads.id AS thread_id'
+                )
+            )
+            .orderBy('thread_id')
     },
     getThreadById(knex, id) {
         return knex
             .from('threads')
+            .join('categories', 'categories.id', 'category')
             .select('*')
-            .where('id', id)
-            .orderBy('id')
+            .select('threads.id AS thread_id')
+            .where('threads.id', id)
+            .first()
     },
     getThreadsByUserId(knex, userId) {
         return knex
-            .select('threads.*')
-            .join('categories', 'categories.id', 'category_id')
+            .from('threads')
+            .join('categories', 'categories.id', 'category')
             .select('*')
             .select(
                 knex.raw(
-                    '"threads"."id" AS "thread_id"'
+                    'threads.id AS thread_id'
                 )
             )
             .where('user_id', userId)
@@ -64,7 +72,7 @@ const ThreadsService = {
             id: thread.id,
             title: thread.title,
             user_id: thread.user_id,
-            category: thread.category_id,
+            category: thread.name,
             date_created: thread.date_created,
             content: thread.content
         }

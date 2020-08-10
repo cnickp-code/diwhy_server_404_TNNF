@@ -74,7 +74,7 @@ function makeThreadsArray() {
             title: 'Test thread 1',
             user_id: 1,
             category: 1,
-            date_created: new Date(),
+            date_created: new Date().toISOString(),
             content: 'Hello world 1'
         },
         {
@@ -82,15 +82,15 @@ function makeThreadsArray() {
             title: 'Test thread 2',
             user_id: 2,
             category: 2,
-            date_created: new Date(),
+            date_created: new Date().toISOString(),
             content: 'Hello world 2'
         },
         {
             id: 3,
             title: 'Test thread 3',
-            user_id: 3,
+            user_id: 2,
             category: 3,
-            date_created: new Date(),
+            date_created: new Date().toISOString(),
             content: 'Hello world 3'
         },
     ]
@@ -127,6 +127,12 @@ function seedUsers(db, users) {
         .into('users')
         .insert(preppedUsers)
         .then(() => db.raw(`SELECT setval('users_id_seq', ?)`, [users[users.length - 1].id]))
+}
+
+function seedThreadsCompact(db, threads) {
+    return db
+        .insert(threads)
+        .into('threads')
 }
 
 function seedThreads(db, threads, categories, users) {
@@ -194,4 +200,5 @@ module.exports = {
     seedCategories,
     seedUserInterests,
     seedThreads,
+    seedThreadsCompact
 }
