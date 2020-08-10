@@ -110,11 +110,14 @@ describe('User Endpoints', function () {
                     password: '11AAaa!!',
                     email: 'test@test.com',
                 }
+            
+
                 return supertest(app)
                     .post('/api/user')
                     .send(newUser)
                     .expect(201)
                     .expect(res => {
+                        console.log(res.body)
                         expect(res.body).to.have.property('id')
                         expect(res.body.user_name).to.eql(newUser.user_name)
                         expect(res.body.email).to.eql(newUser.email)
@@ -147,7 +150,6 @@ describe('User Endpoints', function () {
                                 expect(compareMatch).to.be.true
                             })
                     )
-
             })
         })
     })
