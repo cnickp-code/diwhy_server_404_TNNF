@@ -70,3 +70,5 @@ const ThreadsService = {
         }
     }
 }
+
+module.exports = ThreadsService;

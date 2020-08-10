@@ -52,6 +52,8 @@ userRouter
                 req.app.get('db'),
                 newUser
             )
+
+            //console.log(user);
             
             res
                 .status(201)
