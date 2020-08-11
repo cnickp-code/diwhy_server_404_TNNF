@@ -11,6 +11,7 @@ const categoriesRouter = require('./categories/categories-router')
 const threadsRouter = require('./threads/threads-router')
 const commentsRouter = require('./comments/comments-router')
 const postingsRouter = require('./postings/postings-router')
+const postingApplicantsRouter = require('./posting_applicants/posting_applicants-router')
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use('/api/categories', categoriesRouter)
 app.use('/api/threads', threadsRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/postings', postingsRouter)
+app.use('./api/applicants', postingApplicantsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
