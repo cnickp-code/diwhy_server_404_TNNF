@@ -34,6 +34,7 @@ threadsRouter
             user_id
         }
 
+
         for(const [key, value] of Object.entries(newThread)) {
             if(value == null) {
                 return res.status(404).json({
@@ -44,6 +45,7 @@ threadsRouter
 
         ThreadsService.insertThread(knex, newThread)
             .then(thread => {
+                console.log(thread);
                 res
                     .status(201)
                     .location(`/api/schedule/${thread.id}`)
@@ -97,7 +99,7 @@ threadsRouter
 
         ThreadsService.updateThread(knex, thread_id, updatedThread)
             .then(() => {
-                res.status(204).end();
+                res.status(202).end();
             })
             .catch(next);
     })

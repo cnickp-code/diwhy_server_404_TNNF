@@ -2,6 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const supertest = require('supertest');
 const helpers = require('./test-helpers');
+const { expect } = require('chai');
 
 describe(`Threads endpoints`, () => {
     let db;
@@ -67,9 +68,12 @@ describe(`Threads endpoints`, () => {
 
 
 
-            it.only('Responds with 200 and given thread item', () => {
+            it('Responds with 200 and given thread item', () => {
                 const threadId = 1;
-                const expectedThread = testThreads[threadId - 1];
+                let expectedThread = testThreads[threadId - 1];
+                let cat = testCategories.find(category => category.id === expectedThread.category);
+
+                expectedThread = Object.assign(expectedThread, { category: cat.name })
 
                 return supertest(app)
                     .get(`/api/threads/${threadId}`)
@@ -80,7 +84,35 @@ describe(`Threads endpoints`, () => {
     })
 
     describe(`GET /api/threads/category/:category_id`, () => {
+        context('Should return 200 and given thread', () => {
+            beforeEach('insert test threads', () => {
+                return helpers.seedThreads(
+                    db,
+                    testThreads,
+                    testCategories,
+                    testUsers
+                )
+            })
 
+            it('Responds with 200 and given thread item', () => {
+                let categoryId = 1;
+                let tempThreads = testThreads.filter(thread => thread.category === categoryId)
+                let expectedResult = [];
+
+                tempThreads.forEach(thread => {
+                    let cat = testCategories.find(category => category.id === thread.category);
+
+                    expectedResult.push({
+                        ...thread,
+                        category: cat.name,
+                    })
+                })
+                return supertest(app)
+                    .get(`/api/threads/category/${categoryId}`)
+                    .set('Authorization', helpers.makeAuthHeader(validUser))
+                    .expect(200, expectedResult);
+            })
+        })
     })
 
     describe(`GET /api/threads/user/:user_id`, () => {
@@ -117,14 +149,136 @@ describe(`Threads endpoints`, () => {
     })
 
     describe(`POST /api/threads`, () => {
+        context('Should return 201 and the posted thread', () => {
+            beforeEach('insert test threads', () => {
+                return helpers.seedThreads(
+                    db,
+                    testThreads,
+                    testCategories,
+                    testUsers
+                )
+            })
 
+            it.only('Responds with 201 and added thread item', () => {
+                const newThread = {
+                    id: 4,
+                    title: "Test thread 4",
+                    user_id: 1,
+                    category: 3,
+                    date_created: new Date().toISOString(),
+                    content: 'Hello world 4'
+                }
+
+                return supertest(app)
+                    .post(`/api/threads`)
+                    .set('Authorization', helpers.makeAuthHeader(validUser))
+                    .send(newThread)
+                    .expect(201)
+                    .expect(res => {
+                        expect(res.body).to.be.an('object')
+                        expect(res.body.title).to.eql(newThread.title)
+                        expect(res.body.user_id).to.eql(newThread.user_id)
+                        expect(res.body.category).to.eql(newThread.category)
+                        expect(res.body.date_created).to.eql(newThread.date_created)
+                        expect(res.body.content).to.eql(newThread.content)
+                    })
+                    .then(res => {
+                        return supertest(app)
+                            .get(`/api/threads/${newThread.id}`)
+                            .set('Authorization', helpers.makeAuthHeader(validUser))
+                            .expect(res.body)
+                    })
+            })
+        })
     })
 
     describe(`DELETE /api/threads/:thread_id`, () => {
+        context('Given no threads', () => {
+            beforeEach('insert test threads', () => {
+                return helpers.seedThreads(
+                    db,
+                    testThreads,
+                    testCategories,
+                    testUsers
+                )
+            })
 
+            it('Responds with 404', () => {
+                const threadId = 123456;
+                
+                return supertest(app)
+                    .delete(`/api/threads/${threadId}`)
+                    .set('Authorization', helpers.makeAuthHeader(validUser))
+                    .expect(404)
+            })
+        })
+
+        context('Given thread in database', () => {
+            beforeEach('insert test threads', () => {
+                return helpers.seedThreads(
+                    db,
+                    testThreads,
+                    testCategories,
+                    testUsers
+                )
+            })
+
+            it('Responds with 204 and removes thread', () => {
+                const idToDelete = 1;
+                expectedThreads = testThreads.filter(thread => thread.id !== idToDelete);
+                expectedThreads = expectedThreads.map(thread => {
+                    let categoryString = testCategories.find(cat => cat.id === thread.category)
+
+                    let newThreadObj = Object.assign(thread, { category: categoryString.name })
+
+                    return newThreadObj;
+                })
+
+                return supertest(app)
+                    .delete(`/api/threads/${idToDelete}`)
+                    .set('Authorization', helpers.makeAuthHeader(validUser))
+                    .expect(204)
+                    .then(res => {
+                        return supertest(app)
+                            .get('/api/threads')
+                            .set('Authorization', helpers.makeAuthHeader(validUser))
+                            .expect(expectedThreads)
+                    })
+            })
+        })
     })
 
     describe(`PATCH /api/threads/:thread_id`, () => {
+        context('Given a valid user', () => {
+            beforeEach('insert test threads', () => {
+                return helpers.seedThreads(
+                    db,
+                    testThreads,
+                    testCategories,
+                    testUsers
+                )
+            })
 
+            it('Should respond with 202 with updated item', () => {
+                const idToChange = 1;
+                const threadToUpdate = testThreads[idToChange-1];
+                const category = testCategories.find(cat => cat.id === threadToUpdate.category)
+                const newThread = Object.assign(threadToUpdate, { title: 'New Thread Who Dis' })
+                const expectedThread = { ...newThread, category: category.name }
+            
+                console.log('Expected', expectedThread);
+                return supertest(app)
+                    .patch(`/api/threads/${idToChange}`)
+                    .set('Authorization', helpers.makeAuthHeader(validUser))
+                    .send(newThread)
+                    .expect(202)
+                    .then(res => {
+                        return supertest(app)
+                            .get(`/api/threads/${idToChange}`)
+                            .set('Authorization', helpers.makeAuthHeader(validUser))
+                            .expect(200, expectedThread)
+                    })
+            })
+        })
     })
 })

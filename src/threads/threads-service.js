@@ -37,21 +37,22 @@ const ThreadsService = {
     },
     getThreadsByCategoryId(knex, catId) {
         return knex
-            .select('threads.*')
-            .join('categories', 'categories.id', 'category_id')
+            .from('threads')
+            .join('categories', 'categories.id', 'category')
             .select('*')
             .select(
                 knex.raw(
-                    '"threads"."id" AS "thread_id"'
+                    'threads.id AS thread_id'
                 )
             )
-            .where('category_id', catId)
+            .where('category', catId)
             .orderBy('thread_id')
     },
     insertThread(knex, newThread) {
         return knex
             .insert(newThread)
             .into('threads')
+            // .join('categories', 'categories.id', 'category')
             .returning('*')
             .then(rows => {
                 return rows[0]
