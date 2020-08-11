@@ -25,7 +25,7 @@ commentsRouter
     })
 
 commentsRouter
-    .route('/:thread')
+    .route('/:thread') // MAKE /thread/:thread
     .get(async (req, res, next) => {
         try {
             const threadComments = await CommentsService.getCommentsByThread(
@@ -40,7 +40,7 @@ commentsRouter
     })
 
 commentsRouter
-    .route('/:id')
+    .route('/:id') // TALK ABOUT CHANGING THIS
     .delete(async (req, res, next) => {
         try {
             await CommentsService.deleteComment(
