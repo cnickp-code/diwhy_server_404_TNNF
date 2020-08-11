@@ -5,5 +5,5 @@ CREATE TABLE postings (
     date_created TIMESTAMPTZ DEFAULT now() NOT NULL,
 
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL
+    category INTEGER REFERENCES categories(id) ON DELETE SET NULL
 );

@@ -96,6 +96,35 @@ function makeThreadsArray() {
     ]
 }
 
+function makePostingsArray() {
+    return [
+        {
+            id: 1,
+            title: 'Test posting 1',
+            user_id: 1,
+            category: 1,
+            date_created: new Date().toISOString(),
+            content: 'Hello world 1'
+        },
+        {
+            id: 2,
+            title: 'Test posting 2',
+            user_id: 2,
+            category: 2,
+            date_created: new Date().toISOString(),
+            content: 'Hello world 2'
+        },
+        {
+            id: 3,
+            title: 'Test posting 3',
+            user_id: 2,
+            category: 3,
+            date_created: new Date().toISOString(),
+            content: 'Hello world 3'
+        },
+    ]
+}
+
 function seedUserInterests(db, interests) {
     return db
         .insert(interests)
@@ -154,6 +183,25 @@ function seedThreads(db, threads, categories, users) {
     })
 }
 
+function seedPostings(db, postings, categories, users) {
+    return db.transaction(async trx => {
+        await seedUsers(trx, users)
+        await trx.into('categories').insert(categories.map(category => {
+            let { id, ...newCategory } = category;
+
+            return newCategory;
+        }))
+        await trx.raw(`SELECT setval('categories_id_seq', ?)`, [categories[categories.length - 1].id])
+        await trx.into('postings').insert(postings.map(posting => {
+            let { id, ...newPosting } = posting;
+
+            return newPosting;
+        }))
+        await trx.raw(`SELECT setval('postings_id_seq', ?)`, [postings[postings.length - 1].id])
+    
+    })
+}
+
 function cleanTables(db) {
     return db.transaction(trx =>
         trx.raw(
@@ -195,10 +243,12 @@ module.exports = {
     makeAuthHeader,
     makeInterestsArray,
     makeThreadsArray,
+    makePostingsArray,
     cleanTables,
     seedUsers,
     seedCategories,
     seedUserInterests,
     seedThreads,
-    seedThreadsCompact
+    seedThreadsCompact,
+    seedPostings
 }

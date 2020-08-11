@@ -8,7 +8,7 @@ const PostingsService = {
     getPostingsByCategory(db, category_id) {
         return db
             .from('postings')
-            .where({ category_id })
+            .where({ category: category_id })
             .orderBy('date_created')
     },
     getPostingsByUser(db, user_id) {
@@ -22,6 +22,7 @@ const PostingsService = {
             .from('postings')
             .where({ id })
             .orderBy('date_created')
+            .first()
     },
     deletePosting(db, id) {
         return db
@@ -43,6 +44,15 @@ const PostingsService = {
             .from('postings')
             .where({ id })
             .update(data)
+    },
+    serializePosting(posting) {
+        return {
+            id: posting.id,
+            title: posting.title,
+            user_id: posting.user_id,
+            category_id: posting.category_id,
+            date_created: posting.date_created
+        }
     }
 }
 

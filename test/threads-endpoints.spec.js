@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
 
-describe.only(`Threads endpoints`, () => {
+describe(`Threads endpoints`, () => {
     let db;
 
     const testThreads = helpers.makeThreadsArray();
@@ -225,7 +225,7 @@ describe.only(`Threads endpoints`, () => {
 
             it('Responds with 204 and removes thread', () => {
                 const idToDelete = 1;
-                expectedThreads = testThreads.filter(thread => thread.id !== idToDelete);
+                let expectedThreads = testThreads.filter(thread => thread.id !== idToDelete);
                 // expectedThreads = expectedThreads.map(thread => {
                 //     let categoryString = testCategories.find(cat => cat.id === thread.category)
 
