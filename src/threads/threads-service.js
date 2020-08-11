@@ -70,10 +70,10 @@ const ThreadsService = {
     },
     serializeThread(thread) {
         return {
-            id: thread.id,
+            id: thread.thread_id,
             title: thread.title,
             user_id: thread.user_id,
-            category: thread.name,
+            category: thread.category,
             date_created: thread.date_created,
             content: thread.content
         }

@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
 
-describe(`Threads endpoints`, () => {
+describe.only(`Threads endpoints`, () => {
     let db;
 
     const testThreads = helpers.makeThreadsArray();
@@ -35,22 +35,22 @@ describe(`Threads endpoints`, () => {
                 )
             })
 
-            let expectedResult = [];
+            // let expectedResult = [];
 
-            testThreads.forEach(thread => {
-                let cat = testCategories.find(category => category.id === thread.category);
+            // testThreads.forEach(thread => {
+            //     let cat = testCategories.find(category => category.id === thread.category);
 
-                expectedResult.push({
-                    ...thread,
-                    category: cat.name,
-                })
-            })
+            //     expectedResult.push({
+            //         ...thread,
+            //         category: cat.name,
+            //     })
+            // })
 
             it('responds with 200 and corresponding threads', () => {
                 return supertest(app)
                     .get('/api/threads')
                     .set('Authorization', helpers.makeAuthHeader(validUser))
-                    .expect(200, expectedResult);
+                    .expect(200, testThreads);
             })
         })
     })
@@ -71,9 +71,9 @@ describe(`Threads endpoints`, () => {
             it('Responds with 200 and given thread item', () => {
                 const threadId = 1;
                 let expectedThread = testThreads[threadId - 1];
-                let cat = testCategories.find(category => category.id === expectedThread.category);
+                // let cat = testCategories.find(category => category.id === expectedThread.category);
 
-                expectedThread = Object.assign(expectedThread, { category: cat.name })
+                // expectedThread = Object.assign(expectedThread, { category: cat.name })
 
                 return supertest(app)
                     .get(`/api/threads/${threadId}`)
@@ -97,20 +97,20 @@ describe(`Threads endpoints`, () => {
             it('Responds with 200 and given thread item', () => {
                 let categoryId = 1;
                 let tempThreads = testThreads.filter(thread => thread.category === categoryId)
-                let expectedResult = [];
+                // let expectedResult = [];
 
-                tempThreads.forEach(thread => {
-                    let cat = testCategories.find(category => category.id === thread.category);
+                // tempThreads.forEach(thread => {
+                //     let cat = testCategories.find(category => category.id === thread.category);
 
-                    expectedResult.push({
-                        ...thread,
-                        category: cat.name,
-                    })
-                })
+                //     expectedResult.push({
+                //         ...thread,
+                //         category: cat.name,
+                //     })
+                // })
                 return supertest(app)
                     .get(`/api/threads/category/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(validUser))
-                    .expect(200, expectedResult);
+                    .expect(200, tempThreads);
             })
         })
     })
@@ -129,21 +129,21 @@ describe(`Threads endpoints`, () => {
             it('responds with 200 and corresponding threads', () => {
                 const userId = 1;
                 let tempThreads = testThreads.filter(thread => thread.user_id === userId)
-                let expectedResult = [];
+                // let expectedResult = [];
 
-                tempThreads.forEach(thread => {
-                    let cat = testCategories.find(category => category.id === thread.category);
+                // tempThreads.forEach(thread => {
+                //     let cat = testCategories.find(category => category.id === thread.category);
 
-                    expectedResult.push({
-                        ...thread,
-                        category: cat.name,
-                    })
-                })
+                //     expectedResult.push({
+                //         ...thread,
+                //         category: cat.name,
+                //     })
+                // })
 
                 return supertest(app)
                     .get(`/api/threads/user/${userId}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[userId - 1]))
-                    .expect(200, expectedResult);
+                    .expect(200, tempThreads);
             })
         })
     })
@@ -159,7 +159,7 @@ describe(`Threads endpoints`, () => {
                 )
             })
 
-            it.only('Responds with 201 and added thread item', () => {
+            it('Responds with 201 and added thread item', () => {
                 const newThread = {
                     id: 4,
                     title: "Test thread 4",
@@ -186,7 +186,7 @@ describe(`Threads endpoints`, () => {
                         return supertest(app)
                             .get(`/api/threads/${newThread.id}`)
                             .set('Authorization', helpers.makeAuthHeader(validUser))
-                            .expect(res.body)
+                            .expect(newThread)
                     })
             })
         })
@@ -226,13 +226,13 @@ describe(`Threads endpoints`, () => {
             it('Responds with 204 and removes thread', () => {
                 const idToDelete = 1;
                 expectedThreads = testThreads.filter(thread => thread.id !== idToDelete);
-                expectedThreads = expectedThreads.map(thread => {
-                    let categoryString = testCategories.find(cat => cat.id === thread.category)
+                // expectedThreads = expectedThreads.map(thread => {
+                //     let categoryString = testCategories.find(cat => cat.id === thread.category)
 
-                    let newThreadObj = Object.assign(thread, { category: categoryString.name })
+                //     let newThreadObj = Object.assign(thread, { category: categoryString.name })
 
-                    return newThreadObj;
-                })
+                //     return newThreadObj;
+                // })
 
                 return supertest(app)
                     .delete(`/api/threads/${idToDelete}`)
@@ -266,7 +266,6 @@ describe(`Threads endpoints`, () => {
                 const newThread = Object.assign(threadToUpdate, { title: 'New Thread Who Dis' })
                 const expectedThread = { ...newThread, category: category.name }
             
-                console.log('Expected', expectedThread);
                 return supertest(app)
                     .patch(`/api/threads/${idToChange}`)
                     .set('Authorization', helpers.makeAuthHeader(validUser))
@@ -276,7 +275,7 @@ describe(`Threads endpoints`, () => {
                         return supertest(app)
                             .get(`/api/threads/${idToChange}`)
                             .set('Authorization', helpers.makeAuthHeader(validUser))
-                            .expect(200, expectedThread)
+                            .expect(200, newThread)
                     })
             })
         })
