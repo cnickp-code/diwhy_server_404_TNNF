@@ -23,6 +23,11 @@ const CommentsService = {
             .then(rows => {
                 return rows[0]
             })
+    },
+    updateComment(db, id, data) {
+        return db('comments')
+            .where({ id })
+            .update(data)
     }
 }
 
