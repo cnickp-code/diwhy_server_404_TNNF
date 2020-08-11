@@ -10,6 +10,7 @@ const interestsRouter = require('./user_interests/user_interests-router')
 const categoriesRouter = require('./categories/categories-router')
 const threadsRouter = require('./threads/threads-router')
 const commentsRouter = require('./comments/comments-router')
+const postingsRouter = require('./postings/postings-router')
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use('/api/interests', interestsRouter)
 app.use('/api/categories', categoriesRouter)
 app.use('/api/threads', threadsRouter)
 app.use('/api/comments', commentsRouter)
+app.use('/api/postings', postingsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

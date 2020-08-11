@@ -18,7 +18,7 @@ commentsRouter
                 newComment
             )
 
-            res.status(200).json(insertComment)
+            res.status(201).json(insertComment)
         } catch(error) {
             next(error)
         }
@@ -43,7 +43,26 @@ commentsRouter
     .route('/:id')
     .delete(async (req, res, next) => {
         try {
+            await CommentsService.deleteComment(
+                req.app.get('db'),
+                req.params.id
+            )
+            res.status(204).end()
+        } catch(error) {
+            next(error)
+        }
+    })
 
+    .patch(jsonBodyParser, async (req, res, next) => {
+        try {
+            const { content } = req.body
+
+            const updatedComments = await CommentsService.updateComment(
+                req.app.get('db'),
+                req.params.id,
+                content
+            )
+            res.status(202).json({updatedComments})
         } catch(error) {
             next(error)
         }
