@@ -13,7 +13,9 @@ postingsRouter
             const allPostings = await PostingsService.getAllPostings(
                 req.app.get('db')
             )
-            res.status(200).json(allPostings)
+            res.status(200).json(allPostings.map(posting => {
+                return PostingsService.serializePosting(posting)
+            }))
         } catch (error) {
             next(error)
         }
@@ -28,7 +30,7 @@ postingsRouter
                 req.app.get('db'),
                 newPosting
             )
-            res.status(201).json(insertedPosting)
+            res.status(201).json(PostingsService.serializePosting(insertedPosting))
         } catch (error) {
             next(error)
         }
@@ -56,7 +58,7 @@ postingsRouter
                 
     })
     .get((req, res, next) => {
-        res.status(200).json(res.posting)
+        res.status(200).json(PostingsService.serializePosting(res.posting))
     })
     .delete(async (req, res, next) => {
         try {
@@ -78,7 +80,7 @@ postingsRouter
                 req.params.posting_id,
                 updateData
             )
-            res.status(202).json(updatedPosting)
+            res.status(202).json(PostingsService.serializePosting(updatedPosting))
         } catch (error) {
             next(error)
         }
@@ -92,11 +94,13 @@ postingsRouter
         const { category_id } = req.params
 
         PostingsService.getPostingsByCategory(knex, category_id)
-            .then(threads => {
+            .then(postings => {
 
                 res
                     .status(200)
-                    .json(threads)
+                    .json(postings.map(posting => {
+                        return PostingsService.serializePosting(posting)
+                    }))
             })
     })
 
@@ -108,11 +112,13 @@ postingsRouter
         const { user_id } = req.params
 
         PostingsService.getPostingsByUser(knex, user_id)
-            .then(threads => {
+            .then(postings => {
 
                 res
                     .status(200)
-                    .json(threads)
+                    .json(postings.map(posting => {
+                        return PostingsService.serializePosting(posting)
+                    }))
             })
     })
 

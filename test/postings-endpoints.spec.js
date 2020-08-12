@@ -1,6 +1,7 @@
 const helpers = require('./test-helpers')
 const app = require('../src/app')
 const supertest = require('supertest')
+const { expect } = require('chai')
 
 describe.only(`Postings Endpoints`, () => {
     let db
@@ -31,11 +32,23 @@ describe.only(`Postings Endpoints`, () => {
                 )
             })
 
+            const expectedPostings = testPostings.map(posting => {
+                let user = testUsers.find(user => user.id === posting.user_id);
+
+                let newObj = {
+                    ...posting,
+                    user_name: user.user_name
+                }
+
+                return newObj
+            })
+            console.log('Expected posting: ', expectedPostings);
+
             it('responds with 200 and corresponding postings', () => {
                 return supertest(app)
                     .get('/api/postings')
                     .set('Authorization', helpers.makeAuthHeader(validUser))
-                    .expect(200, testPostings);
+                    .expect(200, expectedPostings);
             })
         })
     })
@@ -54,6 +67,12 @@ describe.only(`Postings Endpoints`, () => {
             it('Responds with 200 and given posting', () => {
                 const postingId = 1;
                 let expectedPosting = testPostings[postingId - 1];
+                let user = testUsers.find(user => user.id === expectedPosting.user_id);
+
+                expectedPosting = {
+                    ...expectedPosting,
+                    user_name: user.user_name
+                }
 
                 return supertest(app)
                     .get(`/api/postings/${postingId}`)
@@ -78,6 +97,17 @@ describe.only(`Postings Endpoints`, () => {
                 let categoryId = 1
                 let tempPostings = testPostings.filter(posting => posting.category === categoryId)
 
+                tempPostings = tempPostings.map(posting => {
+                    let user = testUsers.find(user => user.id === posting.user_id);
+
+                    let newObj = {
+                        ...posting,
+                        user_name: user.user_name
+                    }
+
+                    return newObj
+                })
+
                 return supertest(app)
                     .get(`/api/postings/category/${categoryId}`)
                     .set('Authorization', helpers.makeAuthHeader(validUser))
@@ -100,6 +130,17 @@ describe.only(`Postings Endpoints`, () => {
             it('responds with 200 and corresponding postings', () => {
                 const userId = 1;
                 let tempPostings = testPostings.filter(posting => posting.user_id === userId)
+
+                tempPostings = tempPostings.map(posting => {
+                    let user = testUsers.find(user => user.id === posting.user_id);
+
+                    let newObj = {
+                        ...posting,
+                        user_name: user.user_name
+                    }
+
+                    return newObj
+                })
 
                 return supertest(app)
                     .get(`/api/postings/user/${userId}`)
@@ -131,6 +172,13 @@ describe.only(`Postings Endpoints`, () => {
                     content: 'Hello world 4'
                 }
 
+                let user = testUsers.find(user => user.id === newPosting.user_id);
+
+                let expectedPosting = {
+                    ...newPosting,
+                    user_name: user.user_name
+                }
+
                 return supertest(app)
                 .post(`/api/postings`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
@@ -148,7 +196,7 @@ describe.only(`Postings Endpoints`, () => {
                     return supertest(app)
                         .get(`/api/postings/${newPosting.id}`)
                         .set('Authorization', helpers.makeAuthHeader(validUser))
-                        .expect(newPosting)
+                        .expect(expectedPosting)
                 })
             })
 
@@ -188,8 +236,18 @@ describe.only(`Postings Endpoints`, () => {
 
             it('Responds with 204 and removes posting', () => {
                 const idToDelete = 1;
-                let expectedPostings = testPostings.filter(posting => posting.id !== idToDelete)
+                let tempPostings = testPostings.filter(posting => posting.id !== idToDelete)
 
+                tempPostings = tempPostings.map(posting => {
+                    let user = testUsers.find(user => user.id === posting.user_id);
+
+                    let newObj = {
+                        ...posting,
+                        user_name: user.user_name
+                    }
+
+                    return newObj
+                })
                 return supertest(app)
                     .delete(`/api/postings/${idToDelete}`)
                     .set('Authorization', helpers.makeAuthHeader(validUser))
@@ -198,7 +256,7 @@ describe.only(`Postings Endpoints`, () => {
                         return supertest(app)
                             .get('/api/postings')
                             .set('Authorization', helpers.makeAuthHeader(validUser))
-                            .expect(expectedPostings)
+                            .expect(tempPostings)
                     })
             })
         })
@@ -218,10 +276,16 @@ describe.only(`Postings Endpoints`, () => {
             it('Should respond with 202 with updated item', () => {
                 const idToChange = 1;
                 const postingToUpdate = testPostings[idToChange - 1];
-                const newPosting = {
+                let newPosting = {
                     ...postingToUpdate,
                     title: 'New Posting Who Dis',
                     content: 'New Content Who Dat'
+                }
+
+                let user = testUsers.find(user => user.id === newPosting.user_id);
+                newPosting = {
+                    ...newPosting,
+                    user_name: user.user_name
                 }
 
                 return supertest(app)

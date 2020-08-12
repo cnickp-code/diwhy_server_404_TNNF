@@ -5,6 +5,7 @@ const ThreadsService = {
         return knex
             .from('threads')
             .join('categories', 'categories.id', 'category')
+            .join('users', 'users.id', 'user_id')
             .select('*')
             .select(
                 knex.raw(
@@ -17,6 +18,7 @@ const ThreadsService = {
         return knex
             .from('threads')
             .join('categories', 'categories.id', 'category')
+            .join('users', 'users.id', 'user_id')
             .select('*')
             .select('threads.id AS thread_id')
             .where('threads.id', id)
@@ -26,6 +28,7 @@ const ThreadsService = {
         return knex
             .from('threads')
             .join('categories', 'categories.id', 'category')
+            .join('users', 'users.id', 'user_id')
             .select('*')
             .select(
                 knex.raw(
@@ -39,6 +42,7 @@ const ThreadsService = {
         return knex
             .from('threads')
             .join('categories', 'categories.id', 'category')
+            .join('users', 'users.id', 'user_id')
             .select('*')
             .select(
                 knex.raw(
@@ -73,6 +77,7 @@ const ThreadsService = {
             id: thread.thread_id,
             title: thread.title,
             user_id: thread.user_id,
+            user_name: thread.user_name,
             category: thread.category,
             date_created: thread.date_created,
             content: thread.content

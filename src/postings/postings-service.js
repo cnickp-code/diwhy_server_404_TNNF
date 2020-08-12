@@ -3,25 +3,36 @@ const PostingsService = {
         return db
             .select('*')
             .from('postings')
-            .orderBy('date_created')
+            .join('users', 'users.id', 'user_id')
+            .select('postings.id AS posting_id')
+            .orderBy('posting_id')
     },
     getPostingsByCategory(db, category_id) {
         return db
+            .select('*')
             .from('postings')
+            .join('users', 'users.id', 'user_id')
+            .select('postings.id AS posting_id')
             .where({ category: category_id })
-            .orderBy('date_created')
+            .orderBy('posting_id')
     },
     getPostingsByUser(db, user_id) {
         return db
+            .select('*')
             .from('postings')
+            .join('users', 'users.id', 'user_id')
+            .select('postings.id AS posting_id')
             .where({ user_id })
-            .orderBy('date_created')
+            .orderBy('posting_id')
     },
     getPostingById(db, id) {
         return db
+            .select('*')
             .from('postings')
-            .where({ id })
-            .orderBy('date_created')
+            .join('users', 'users.id', 'user_id')
+            .select('postings.id AS posting_id')
+            .where('postings.id', id)
+            .orderBy('posting_id')
             .first()
     },
     deletePosting(db, id) {
@@ -47,11 +58,13 @@ const PostingsService = {
     },
     serializePosting(posting) {
         return {
-            id: posting.id,
+            id: posting.posting_id,
             title: posting.title,
             user_id: posting.user_id,
-            category_id: posting.category_id,
-            date_created: posting.date_created
+            user_name: posting.user_name,
+            category: posting.category,
+            date_created: posting.date_created,
+            content: posting.content
         }
     }
 }
