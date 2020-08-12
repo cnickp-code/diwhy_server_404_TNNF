@@ -3,10 +3,10 @@ const xss = require('xss')
 const ThreadsService = {
     getAllThreads(knex) {
         return knex
+            .select('*')
             .from('threads')
             .join('categories', 'categories.id', 'category')
             .join('users', 'users.id', 'user_id')
-            .select('*')
             .select(
                 knex.raw(
                     'threads.id AS thread_id'

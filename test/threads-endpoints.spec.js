@@ -3,6 +3,7 @@ const app = require('../src/app');
 const supertest = require('supertest');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
+const postingsRouter = require('../src/postings/postings-router');
 
 describe(`Threads endpoints`, () => {
     let db;
@@ -35,6 +36,17 @@ describe(`Threads endpoints`, () => {
                 )
             })
 
+            let expectedThreads = testThreads.map(thread => {
+                let user = testUsers.find(user => user.id === thread.user_id);
+
+                let newObj = {
+                    ...thread,
+                    user_name: user.user_name
+                }
+
+                return newObj
+            })
+
             // let expectedResult = [];
 
             // testThreads.forEach(thread => {
@@ -46,11 +58,11 @@ describe(`Threads endpoints`, () => {
             //     })
             // })
 
-            it('responds with 200 and corresponding threads', () => {
+            it.only('responds with 200 and corresponding threads', () => {
                 return supertest(app)
                     .get('/api/threads')
                     .set('Authorization', helpers.makeAuthHeader(validUser))
-                    .expect(200, testThreads);
+                    .expect(200, expectedThreads);
             })
         })
     })
