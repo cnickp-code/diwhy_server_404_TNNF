@@ -117,7 +117,7 @@ describe('User Endpoints', function () {
                     .send(newUser)
                     .expect(201)
                     .expect(res => {
-                        console.log(res.body)
+                        // console.log(res.body)
                         expect(res.body).to.have.property('id')
                         expect(res.body.user_name).to.eql(newUser.user_name)
                         expect(res.body.email).to.eql(newUser.email)

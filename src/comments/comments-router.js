@@ -25,15 +25,16 @@ commentsRouter
     })
 
 commentsRouter
-    .route('/:thread') // MAKE /thread/:thread
+    .route('/thread/:thread') 
     .get(async (req, res, next) => {
         try {
+            console.log('thread id', req.params.thread)
             const threadComments = await CommentsService.getCommentsByThread(
                 req.app.get('db'),
                 req.params.thread
             )
-
-            res.json(threadComments)
+            console.log('comment', threadComments)
+            res.status(200).json(threadComments)
         } catch(error) {
             next(error)
         }
@@ -56,13 +57,17 @@ commentsRouter
     .patch(jsonBodyParser, async (req, res, next) => {
         try {
             const { content } = req.body
-
-            const updatedComments = await CommentsService.updateComment(
+            await CommentsService.updateComment(
                 req.app.get('db'),
                 req.params.id,
-                content
+                { content: content }
             )
-            res.status(202).json({updatedComments})
+            const updatedComments = await CommentsService.getCommentById(
+                req.app.get('db'),
+                req.params.id
+            )
+            console.log(updatedComments)
+            res.status(202).json(updatedComments)
         } catch(error) {
             next(error)
         }
