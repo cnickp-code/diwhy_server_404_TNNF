@@ -33,7 +33,7 @@ threadsRouter
             content,
             user_id
         }
-
+        console.log(newThread);
 
         for(const [key, value] of Object.entries(newThread)) {
             if(value == null) {
