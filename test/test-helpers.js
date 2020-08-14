@@ -125,6 +125,18 @@ function makePostingsArray() {
     ]
 }
 
+function makeCommentsArray() {
+    return [
+        {
+            id: 1,
+            content: 'test comment',
+            date_created: new Date().toISOString(),
+            user_id: 1,
+            thread_id: 1
+        }
+    ]
+}
+
 function seedUserInterests(db, interests) {
     return db
         .insert(interests)
@@ -202,6 +214,12 @@ function seedPostings(db, postings, categories, users) {
     })
 }
 
+function seedComments(db, comments) {
+    return db
+        .insert(comments)
+        .into('comments')
+}
+
 function cleanTables(db) {
     return db.transaction(trx =>
         trx.raw(
@@ -244,11 +262,13 @@ module.exports = {
     makeInterestsArray,
     makeThreadsArray,
     makePostingsArray,
+    makeCommentsArray,
     cleanTables,
     seedUsers,
     seedCategories,
     seedUserInterests,
     seedThreads,
     seedThreadsCompact,
-    seedPostings
+    seedPostings,
+    seedComments
 }

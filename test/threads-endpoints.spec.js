@@ -58,7 +58,7 @@ describe(`Threads endpoints`, () => {
             //     })
             // })
 
-            it.only('responds with 200 and corresponding threads', () => {
+            it('responds with 200 and corresponding threads', () => {
                 return supertest(app)
                     .get('/api/threads')
                     .set('Authorization', helpers.makeAuthHeader(validUser))

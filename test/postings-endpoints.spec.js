@@ -3,7 +3,7 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only(`Postings Endpoints`, () => {
+describe(`Postings Endpoints`, () => {
     let db
 
 
@@ -42,7 +42,7 @@ describe.only(`Postings Endpoints`, () => {
 
                 return newObj
             })
-            console.log('Expected posting: ', expectedPostings);
+            // console.log('Expected posting: ', expectedPostings);
 
             it('responds with 200 and corresponding postings', () => {
                 return supertest(app)

@@ -45,7 +45,7 @@ threadsRouter
 
         ThreadsService.insertThread(knex, newThread)
             .then(thread => {
-                console.log(thread);
+                // console.log(thread);
                 res
                     .status(201)
                     .location(`/api/schedule/${thread.id}`)

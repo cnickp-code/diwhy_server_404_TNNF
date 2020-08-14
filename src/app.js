@@ -30,7 +30,7 @@ app.use('/api/categories', categoriesRouter)
 app.use('/api/threads', threadsRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/postings', postingsRouter)
-app.use('./api/applicants', postingApplicantsRouter)
+app.use('/api/applicants', postingApplicantsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

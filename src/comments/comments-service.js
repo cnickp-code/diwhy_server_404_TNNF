@@ -1,8 +1,16 @@
 const CommentsService = {
     getCommentsByThread(db, thread_id) {
         return db
+            .select('*')
             .from('comments')
             .where({ thread_id })
+            .orderBy('date_created')
+    },
+    getCommentById(db, id) {
+        return db
+            .select('*')
+            .from('comments')
+            .where({ id })
             .orderBy('date_created')
     },
     getAllComments(db) {
