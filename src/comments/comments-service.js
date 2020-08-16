@@ -3,20 +3,33 @@ const CommentsService = {
         return db
             .select('*')
             .from('comments')
+            .join('users', 'users.id', 'user_id')
+            .select('comments.id AS comment_id')
             .where({ thread_id })
-            .orderBy('date_created')
+            .orderBy('comment_id')
     },
     getCommentById(db, id) {
         return db
             .select('*')
             .from('comments')
-            .where({ id })
-            .orderBy('date_created')
+            .join('users', 'users.id', 'user_id')
+            .select('comments.id AS comment_id')
+            .where('comments.id', id)
+            .first()
+    },
+    getCommentByUser(db, user_id) {
+        return db
+            .select('*')
+            .from('comments')
+            .join('users', 'users.id', 'user_id')
+            .select('comments.id AS comment_id')
+            .where({ user_id })
+            .orderBy('comment_id')
     },
     getAllComments(db) {
         return db
             .from('comments')
-            .orderBy('date_created')
+            .orderBy('id')
     },
     deleteComment(db, id) {
         return db('comments')
@@ -36,6 +49,16 @@ const CommentsService = {
         return db('comments')
             .where({ id })
             .update(data)
+    },
+    serializeComment(comment) {
+        return {
+            id: comment.id,
+            content: comment.content,
+            user_id: comment.user_id,
+            thread_id: comment.thread_id,
+            user_name: comment.user_name,
+            date_created: comment.date_created
+        }
     }
 }
 

@@ -2,7 +2,7 @@ const helpers = require('./test-helpers')
 const app = require('../src/app')
 const supertest = require('supertest')
 
-describe(`Comments Endpoints`, () => {
+describe.only(`Comments Endpoints`, () => {
     let db
 
     const testThreads = helpers.makeThreadsArray();
@@ -25,7 +25,7 @@ describe(`Comments Endpoints`, () => {
     afterEach('cleanup', () => helpers.cleanTables(db))
 
     describe(`POST /api/comments`, () => {
-        beforeEach('insert test threads', () => {
+        beforeEach('insert test comments, threads, users, categories', () => {
             return helpers.seedThreads(
                 db,
                 testThreads,
@@ -35,95 +35,128 @@ describe(`Comments Endpoints`, () => {
         })
 
         it('responds 201 with the inserted comment', () => {
+            let date = new Date().toISOString();
+            const newComment = {
+                id: 3,
+                content: 'test comment 3',
+                date_created: date,
+                user_id: 1,
+                thread_id: 1
+            }
+
+            let user = testUsers.find(user => user.id === newComment.user_id);
+
+            let expectedComment = {
+                ...newComment,
+                user_name: user.user_name
+            }
             return supertest(app)
+                .post(`/api/comments`)
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .send(newComment)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body).to.be.an('object')
+                    expect(res.body.content).to.be.eql(newComment.content)
+                    expect(res.body.date_created).to.be.eql(newComment.date_created)
+                    expect(res.body.user_id).to.be.eql(newComment.user_id)
+                    expect(res.body.thread_id).to.be.eql(newComment.thread_id)
+                })
+                .then(res => {
+                    return supertest(app)
+                        .get(`/api/comments/${newComment.id}`)
+                        .set('Authorization', helpers.makeAuthHeader(testUser))
+                        .expect(expectedComment)
+                })
         })
     })
 
-    describe.only(`GET /api/comments/:thread`, () => {
-        beforeEach('insert users', () => 
-            helpers.seedUsers(
+    describe(`GET /api/comments/:thread`, () => {
+        beforeEach('insert comments, threads, users, categories', () => 
+            helpers.seedComments(
                 db, 
-                testUsers
-            )
-        )
-
-        beforeEach('insert categories', () => 
-            helpers.seedCategories(
-                db,
+                testComments,
+                testThreads,
+                testUsers,
                 testCategories
             )
         )
-
-        beforeEach('insert interests', () => 
-            helpers.seedUserInterests(
-                db,
-                testInterests
-            )
-        )
         
-        beforeEach('insert threads', () => {
-            helpers.seedThreadsCompact(
-                db,
-                testThreads
-            )
-        })
+        
 
-        beforeEach('insert comments', () => {
-            helpers.seedComments(
-                db,
-                testComments
-            )
-        })
         it('responds 200 with the comments for that thread', () => {
-            const threadsId = 1
-            console.log(testComments)
+            const threadId = 1
+            let expectedComments = testComments.filter(comment => comment.thread_id === threadId)
+
+            expectedComments = expectedComments.map(comment => {
+                let user = testUsers.find(user => user.id === comment.user_id)
+
+                let newObj = {
+                    ...comment,
+                    user_name: user.user_name
+                }
+
+                return newObj
+            })
+
             return supertest(app)
-                .get(`/api/comments/thread/1`)
+                .get(`/api/comments/thread/${threadId}`)
                 .set('Authorization', helpers.makeAuthHeader(testUser))
-                .expect(200, testComments)
+                .expect(200, expectedComments)
         })
     })
 
     describe(`DELETE /api/comments/:id`, () => {
-        beforeEach('insert test threads', () => {
-            return helpers.seedThreads(
-                db,
-                testThreads,
-                testCategories,
-                testUsers
-            )
-        })
-        beforeEach('insert comments', () => {
+        beforeEach('insert comments, threads, users, categories', () => 
             helpers.seedComments(
-                db,
-                testComments
+                db, 
+                testComments,
+                testThreads,
+                testUsers,
+                testCategories
             )
-        })
+        )
         it('responds 204 for deleted comment', () => {
+            const threadId = 1;
+            const commentId = 1;
+            let expectedComments = testComments.filter(comment => comment.id !== commentId);
+
+            expectedComments = expectedComments.map(comment => {
+                let user = testUsers.find(user => user.id === comment.user_id)
+                
+                let newObj = {
+                    ...comment,
+                    user_name: user.user_name
+                }
+
+                return newObj;
+            })
+            console.log(expectedComments)
             return supertest(app)
-                .delete('/api/comments/1')
+                .delete(`/api/comments/${commentId}`)
                 .set('Authorization', helpers.makeAuthHeader(testUser))
                 .expect(204)
+                .then(res => {
+                    return supertest(app)
+                        .get(`/api/comments/thread/${threadId}`)
+                        .set('Authorization', helpers.makeAuthHeader(testUser))
+                        .expect(200, expectedComments)
+                })
         })
     })
 
     describe(`PATCH /api/comments/:id`, () => {
-        beforeEach('insert test threads', () => {
-            return helpers.seedThreads(
-                db,
-                testThreads,
-                testCategories,
-                testUsers
-            )
-        })
-        beforeEach('insert comments', () => {
+        beforeEach('insert comments, threads, users, categories', () => 
             helpers.seedComments(
-                db,
-                testComments
+                db, 
+                testComments,
+                testThreads,
+                testUsers,
+                testCategories
             )
-        })
-        it('responds 202 with the updated comment', () => {
-            const update = { content: 'update content' }
+        )
+        it.only('responds 202 with the updated comment', () => {
+            const commentId = 1;
             const expectedUpdate = {
                 id: 1,
                 content: 'update content',
@@ -131,11 +164,25 @@ describe(`Comments Endpoints`, () => {
                 user_id: 1,
                 thread_id: 1
             }
+
+            let user = testUsers.find(user => user.id === expectedUpdate.user_id)
+
+            let expectedComment = {
+                ...expectedUpdate,
+                user_name: user.user_name
+            }
+
+
             return supertest(app)
                 .patch('/api/comments/1')
                 .set('Authorization', helpers.makeAuthHeader(testUser))
                 .send(expectedUpdate)
-                .expect(expectedUpdate)
+                .then(res => {
+                    return supertest(app)
+                        .get(`/api/comments/${commentId}`)
+                        .set('Authorization', helpers.makeAuthHeader(testUser))
+                        .expect(200, expectedComment)
+                })
         })
     })
 })

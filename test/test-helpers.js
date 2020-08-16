@@ -129,9 +129,16 @@ function makeCommentsArray() {
     return [
         {
             id: 1,
-            content: 'test comment',
+            content: 'test comment 1',
             date_created: new Date().toISOString(),
             user_id: 1,
+            thread_id: 1
+        },
+        {
+            id: 2,
+            content: 'test comment 2',
+            date_created: new Date().toISOString(),
+            user_id: 2,
             thread_id: 1
         }
     ]
@@ -214,10 +221,17 @@ function seedPostings(db, postings, categories, users) {
     })
 }
 
-function seedComments(db, comments) {
-    return db
-        .insert(comments)
-        .into('comments')
+function seedComments(db, comments, threads, users, categories) {
+    return db.transaction(async trx => {
+        await seedThreads(trx, threads, categories, users)
+        await trx.into('comments').insert(comments.map(comment => {
+            let { id, ...newComment } = comment;
+
+            return newComment;
+        }))
+        await trx.raw(`SELECT setval('postings_id_seq', ?)`, [comments[comments.length - 1].id])
+    
+    })
 }
 
 function cleanTables(db) {
