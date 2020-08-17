@@ -10,8 +10,8 @@ commentsRouter
     .all(requireAuth)
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { content, thread_id, user_id } = req.body
-            const newComment = { content, thread_id, user_id }
+            const { content, thread_id, user_id, date_created } = req.body
+            const newComment = { content, thread_id, user_id, date_created }
 
             const insertComment = await CommentsService.insertComment(
                 req.app.get('db'),
@@ -35,10 +35,9 @@ commentsRouter
             )
 
             let newComments = threadComments.map(comment => {
-                console.log(comment);
                 return CommentsService.serializeComment(comment);
             })
-            console.log(newComments)
+
 
             res.status(200).json(newComments)
         } catch(error) {

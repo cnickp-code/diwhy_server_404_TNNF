@@ -21,7 +21,7 @@ describe(`Postings Endpoints`, () => {
     before('cleanup', () => helpers.cleanTables(db))
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe(`GET /api/postings`, () => {
+    describe.only(`GET /api/postings`, () => {
         context(`Given valid user`, () => {
             beforeEach('insert postings', () => {
                 return helpers.seedPostings(

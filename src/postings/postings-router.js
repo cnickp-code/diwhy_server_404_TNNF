@@ -13,6 +13,8 @@ postingsRouter
             const allPostings = await PostingsService.getAllPostings(
                 req.app.get('db')
             )
+
+            console.log(allPostings);
             res.status(200).json(allPostings.map(posting => {
                 return PostingsService.serializePosting(posting)
             }))
