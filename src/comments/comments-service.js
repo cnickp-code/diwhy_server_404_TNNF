@@ -4,6 +4,7 @@ const CommentsService = {
             .select('*')
             .from('comments')
             .join('users', 'users.id', 'user_id')
+            // .select('users.id AS userId')
             .select('comments.id AS comment_id')
             .where({ thread_id })
             .orderBy('comment_id')
@@ -52,7 +53,7 @@ const CommentsService = {
     },
     serializeComment(comment) {
         return {
-            id: comment.id,
+            id: comment.comment_id,
             content: comment.content,
             user_id: comment.user_id,
             thread_id: comment.thread_id,

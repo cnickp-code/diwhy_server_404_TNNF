@@ -23,6 +23,12 @@ function makeUsersArray() {
             email: 'testuser2@test.com',
             password: 'password',
         },
+        {
+            id: 3,
+            user_name: 'test-user-3',
+            email: 'testuser3@test.com',
+            password: 'password',
+        },
     ]
 }
 
@@ -109,7 +115,7 @@ function makePostingsArray() {
         {
             id: 2,
             title: 'Test posting 2',
-            user_id: 2,
+            user_id: 1,
             category: 2,
             date_created: new Date().toISOString(),
             content: 'Hello world 2'
@@ -139,6 +145,13 @@ function makeCommentsArray() {
             content: 'test comment 2',
             date_created: new Date().toISOString(),
             user_id: 2,
+            thread_id: 1
+        },
+        {
+            id: 3,
+            content: 'test comment 3',
+            date_created: new Date().toISOString(),
+            user_id: 1,
             thread_id: 1
         }
     ]

@@ -35,6 +35,7 @@ commentsRouter
             )
 
             let newComments = threadComments.map(comment => {
+                console.log(comment);
                 return CommentsService.serializeComment(comment);
             })
             console.log(newComments)

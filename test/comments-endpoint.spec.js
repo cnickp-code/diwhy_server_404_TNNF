@@ -84,7 +84,7 @@ describe.only(`Comments Endpoints`, () => {
         
         
 
-        it('responds 200 with the comments for that thread', () => {
+        it.only('responds 200 with the comments for that thread', () => {
             const threadId = 1
             let expectedComments = testComments.filter(comment => comment.thread_id === threadId)
 
@@ -155,7 +155,7 @@ describe.only(`Comments Endpoints`, () => {
                 testCategories
             )
         )
-        it.only('responds 202 with the updated comment', () => {
+        it('responds 202 with the updated comment', () => {
             const commentId = 1;
             const expectedUpdate = {
                 id: 1,
