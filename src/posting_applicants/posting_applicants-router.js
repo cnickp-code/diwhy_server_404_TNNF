@@ -10,14 +10,6 @@ const jsonBodyParser = express.json()
 postingApplicantsRouter
     .route('/')
     .all(requireAuth)
-    // .get(async (req, res, next) => {
-    //     try {
-            
-    //     } catch(error) {
-    //         next(error)
-    //     }
-    // })
-
     .post(jsonBodyParser, async (req, res, next) => {
         try {
             const { posting_id, applicant_id } = req.body
@@ -36,6 +28,7 @@ postingApplicantsRouter
 
 postingApplicantsRouter
     .route('/:id')
+    .all(requireAuth)
     .delete(async (req, res, next) => {
         try {
             await PostingApplicantsService.deletePostingApplicant(
@@ -52,6 +45,7 @@ postingApplicantsRouter
 
 postingApplicantsRouter
     .route('/posting/:posting_id')
+    .all(requireAuth)
     .get((req, res, next) => {
         const db = req.app.get('db');
         const { posting_id } = req.params
@@ -71,6 +65,7 @@ postingApplicantsRouter
 
 postingApplicantsRouter
     .route('/user/:user_id')
+    .all(requireAuth)
     .get((req, res, next) => {
         const db = req.app.get('db')
         const { user_id } = req.params
