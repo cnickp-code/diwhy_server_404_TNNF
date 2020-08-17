@@ -22,10 +22,10 @@ postingsRouter
     })
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { title, content, user_id, category } = req.body
-
+            const { title, content, category } = req.body
+            const  user_id = req.user.id
             const newPosting = { title, content, user_id, category }
-
+            console.log('posting', newPosting)
             const insertedPosting = await PostingsService.insertPosting(
                 req.app.get('db'),
                 newPosting
