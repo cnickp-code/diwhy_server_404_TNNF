@@ -1,6 +1,8 @@
 const express = require('express')
 const PostingApplicantsService = require('./posting_applicants-service')
 const { requireAuth } = require('../middleware/jwt-auth')
+const { serializeApplicationDetails } = require('./posting_applicants-service')
+const { application } = require('express')
 
 const postingApplicantsRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -8,13 +10,13 @@ const jsonBodyParser = express.json()
 postingApplicantsRouter
     .route('/')
     .all(requireAuth)
-    .get(async (req, res, next) => {
-        try {
-            // need to decided what applicants we want to get
-        } catch(error) {
-            next(error)
-        }
-    })
+    // .get(async (req, res, next) => {
+    //     try {
+            
+    //     } catch(error) {
+    //         next(error)
+    //     }
+    // })
 
     .post(jsonBodyParser, async (req, res, next) => {
         try {
@@ -45,6 +47,45 @@ postingApplicantsRouter
         } catch(error) {
             next(error)
         }
+    })
+
+
+postingApplicantsRouter
+    .route('/posting/:posting_id')
+    .get((req, res, next) => {
+        const db = req.app.get('db');
+        const { posting_id } = req.params
+
+        PostingApplicantsService.getByPostingId(db, posting_id)
+            .then(applications => {
+                if(!applications){
+                    return res.status(404).send('no current applications')
+                }
+                const newApplications = applications.map(application => {
+                    return PostingApplicantsService.serializeApplicationDetails(application)
+                })
+                res.status.json(newApplications)
+            })
+            .catch(err => next(err));
+    })
+
+postingApplicantsRouter
+    .route('/user/:user_id')
+    .get((req, res, next) => {
+        const db = req.app.get('db')
+        const { user_id } = req.params
+
+        PostingApplicantsService.getApplicationsByUser(db, user_id) 
+            .then(applications => {
+                if(!applications){
+                    return res.status(404).send('you have no active applications')
+                }
+                const userApplications = applications.map(application => {
+                    return PostingApplicantsService.serializeApplicationDetails(application)
+                })
+                res.status.json(userApplications)
+            })
+            .catch(err => next(err));
     })
 
 module.exports = postingApplicantsRouter
