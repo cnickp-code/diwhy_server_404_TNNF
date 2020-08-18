@@ -44,7 +44,7 @@ const PostingApplicantsService = {
             content: application.content,
             posting_id: application.posting_id,
             user: {
-                user_id: application.applicant_id,
+                user_name: application.user_name,
                 email: application.email,
                 endorsements: application.endorsements
             }

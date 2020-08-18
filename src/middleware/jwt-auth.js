@@ -14,18 +14,26 @@ async function requireAuth(req, res, next) {
     try {
         const payload = AuthService.verifyJwt(bearerToken)
 
+
         const user = await AuthService.getUserWithEmail(
             req.app.get('db'),
             payload.email
         )
-        if (!user)
+
+        console.log(user);
+
+        if (!user) {
             return res.status(401).json({ error: 'Unauthorized request' })
+        }
+            
 
         req.user = user
         next()
     } catch (error) {
-        if (error instanceof JsonWebTokenError)
+        if (error instanceof JsonWebTokenError) {
             return res.status(401).json({ error: 'Unauthorized request' })
+        }
+            
 
         next(error)
     }

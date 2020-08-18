@@ -5,7 +5,7 @@ const helpers = require('./test-helpers');
 const { expect } = require('chai');
 const applicantsRouter = require('../src/posting_applicants/posting_applicants-router');
 
-describe('Applicants endpoints', () => {
+describe.only('Applicants endpoints', () => {
     let db;
 
     const testApplicants = helpers.makeApplicantsArray();
@@ -20,8 +20,11 @@ describe('Applicants endpoints', () => {
     })
 
     after('disconnect from db', () => db.destroy())
+
     before('cleanup', () => helpers.cleanTables(db))
+
     afterEach('cleanup', () => helpers.cleanTables(db))
+
 
     describe(`GET /api/applicants/postings/:posting_id`, () => {
         beforeEach('seed tables', () => {
@@ -42,7 +45,7 @@ describe('Applicants endpoints', () => {
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
-                    user_id: user.id
+                    user_name: user.user_name
                 }
 
                 let newObj = {
@@ -81,7 +84,7 @@ describe('Applicants endpoints', () => {
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
-                    user_id: user.id
+                    user_name: user.user_name
                 }
 
                 let newObj = {
@@ -129,7 +132,7 @@ describe('Applicants endpoints', () => {
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
-                    user_id: user.id
+                    user_name: user.user_name
                 }
 
                 let newObj = {
@@ -173,7 +176,7 @@ describe('Applicants endpoints', () => {
             )
         })
 
-        it.only(`Responds 204 for deleted comment`, () => {
+        it(`Responds 204 for deleted comment`, () => {
             const appId = 1;
             let testApp = testApplicants[appId - 1];
 
@@ -185,7 +188,7 @@ describe('Applicants endpoints', () => {
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
-                    user_id: user.id
+                    user_name: user.user_name
                 }
 
                 let newObj = {

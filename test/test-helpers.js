@@ -201,12 +201,14 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 }
 
 function seedUsers(db, users) {
+
     const preppedUsers = users.map(user => {
         let { id, ...newUser } = user;
         newUser.password = bcrypt.hashSync(user.password, 12);
 
         return newUser;
     })
+
     return db
         .into('users')
         .insert(preppedUsers)
