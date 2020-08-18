@@ -12,8 +12,8 @@ postingApplicantsRouter
     .all(requireAuth)
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { posting_id, applicant_id } = req.body
-            const newPostingApplicant = { posting_id, applicant_id }
+            const { posting_id, content, applicant_id } = req.body
+            const newPostingApplicant = { posting_id, content, applicant_id }
 
             const postedApplicant = await PostingApplicantsService.insertPostingApplicant(
                 req.app.get('db'),
@@ -44,7 +44,7 @@ postingApplicantsRouter
 
 
 postingApplicantsRouter
-    .route('/posting/:posting_id')
+    .route('/postings/:posting_id')
     .all(requireAuth)
     .get((req, res, next) => {
         const db = req.app.get('db');
@@ -58,7 +58,7 @@ postingApplicantsRouter
                 const newApplications = applications.map(application => {
                     return PostingApplicantsService.serializeApplicationDetails(application)
                 })
-                res.status.json(newApplications)
+                res.status(200).json(newApplications)
             })
             .catch(err => next(err));
     })
@@ -78,7 +78,7 @@ postingApplicantsRouter
                 const userApplications = applications.map(application => {
                     return PostingApplicantsService.serializeApplicationDetails(application)
                 })
-                res.status.json(userApplications)
+                res.status(200).json(userApplications)
             })
             .catch(err => next(err));
     })

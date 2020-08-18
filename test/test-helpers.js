@@ -273,7 +273,7 @@ function seedComments(db, comments, threads, users, categories) {
 function seedApplicants(db, applicants, postings, users, categories) {
     return db.transaction(async trx => {
         await seedPostings(trx, postings, categories, users)
-        await trx.into('applicants').insert(applicants.map(applicant => {
+        await trx.into('posting_applicants').insert(applicants.map(applicant => {
             let { id, ...newApplicant } = applicant;
 
             return newApplicant

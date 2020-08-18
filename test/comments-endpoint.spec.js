@@ -2,7 +2,7 @@ const helpers = require('./test-helpers')
 const app = require('../src/app')
 const supertest = require('supertest')
 
-describe.only(`Comments Endpoints`, () => {
+describe(`Comments Endpoints`, () => {
     let db
 
     const testThreads = helpers.makeThreadsArray();
