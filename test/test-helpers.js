@@ -157,6 +157,29 @@ function makeCommentsArray() {
     ]
 }
 
+function makeApplicantsArray() {
+    return [
+        {
+            id: 1,
+            content: 'this is a test, but still please hire me',
+            applicant_id: 1,
+            posting_id: 1
+        },
+        {
+            id: 2,
+            content: 'this is a test, but still please hire me',
+            applicant_id: 2,
+            posting_id: 1
+        },
+        {
+            id: 3,
+            content: 'this is a test, but still please hire me',
+            applicant_id: 1,
+            posting_id: 2
+        }
+    ]
+}
+
 function seedUserInterests(db, interests) {
     return db
         .insert(interests)
@@ -242,8 +265,21 @@ function seedComments(db, comments, threads, users, categories) {
 
             return newComment;
         }))
-        await trx.raw(`SELECT setval('postings_id_seq', ?)`, [comments[comments.length - 1].id])
+        await trx.raw(`SELECT setval('comments_id_seq', ?)`, [comments[comments.length - 1].id])
     
+    })
+}
+
+function seedApplicants(db, applicants, postings, users, categories) {
+    return db.transaction(async trx => {
+        await seedPostings(trx, postings, categories, users)
+        await trx.into('applicants').insert(applicants.map(applicant => {
+            let { id, ...newApplicant } = applicant;
+
+            return newApplicant
+        }))
+        //postings or posting_applicants?...
+        await trx.raw(`SELECT setval('posting_applicants_id_seq', ?)`, [applicants[applicants.length - 1].id])
     })
 }
 
@@ -290,6 +326,7 @@ module.exports = {
     makeThreadsArray,
     makePostingsArray,
     makeCommentsArray,
+    makeApplicantsArray,
     cleanTables,
     seedUsers,
     seedCategories,
@@ -297,5 +334,6 @@ module.exports = {
     seedThreads,
     seedThreadsCompact,
     seedPostings,
-    seedComments
+    seedComments,
+    seedApplicants
 }
