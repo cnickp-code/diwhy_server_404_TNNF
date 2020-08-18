@@ -65,7 +65,6 @@ commentsRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        console.log(res.comment)
         res.status(200).json(CommentsService.serializeComment(res.comment));
     })
     .delete(async (req, res, next) => {
@@ -92,7 +91,6 @@ commentsRouter
                 req.app.get('db'),
                 req.params.comment_id
             )
-            console.log(updatedComments)
             res.status(202).json(CommentsService.serializeComment(updatedComments))
         } catch(error) {
             next(error)

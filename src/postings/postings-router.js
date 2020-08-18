@@ -14,7 +14,6 @@ postingsRouter
                 req.app.get('db')
             )
 
-            console.log(allPostings);
             res.status(200).json(allPostings.map(posting => {
                 return PostingsService.serializePosting(posting)
             }))
@@ -27,7 +26,7 @@ postingsRouter
             const { title, content, category } = req.body
             const  user_id = req.user.id
             const newPosting = { title, content, user_id, category }
-            console.log('posting', newPosting)
+
             const insertedPosting = await PostingsService.insertPosting(
                 req.app.get('db'),
                 newPosting
