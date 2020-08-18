@@ -3,7 +3,6 @@ const CategoriesService = require('./categories-service');
 
 const categoriesRouter = express.Router();
 const { requireAuth } = require('../middleware/jwt-auth');
-const { restart } = require('nodemon');
 
 const bodyParser = express.json();
 
