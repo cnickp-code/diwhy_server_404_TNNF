@@ -33,7 +33,6 @@ threadsRouter
             content,
             user_id
         }
-        console.log(newThread);
 
         for(const [key, value] of Object.entries(newThread)) {
             if(value == null) {
@@ -45,7 +44,7 @@ threadsRouter
 
         ThreadsService.insertThread(knex, newThread)
             .then(thread => {
-                // console.log(thread);
+                
                 res
                     .status(201)
                     .location(`/api/schedule/${thread.id}`)

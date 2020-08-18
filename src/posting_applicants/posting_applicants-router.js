@@ -12,9 +12,10 @@ postingApplicantsRouter
     .all(requireAuth)
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { posting_id, content, applicant_id } = req.body
+            const { posting_id, content } = req.body
+            const applicant_id = req.user.id
             const newPostingApplicant = { posting_id, content, applicant_id }
-
+    
             const postedApplicant = await PostingApplicantsService.insertPostingApplicant(
                 req.app.get('db'),
                 newPostingApplicant

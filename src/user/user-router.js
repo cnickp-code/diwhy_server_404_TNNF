@@ -53,7 +53,7 @@ userRouter
                 newUser
             )
 
-            //console.log(user);
+            
             
             res
                 .status(201)
