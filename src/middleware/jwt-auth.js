@@ -20,8 +20,6 @@ async function requireAuth(req, res, next) {
             payload.email
         )
 
-        console.log(user);
-
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized request' })
         }

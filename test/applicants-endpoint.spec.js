@@ -28,7 +28,7 @@ describe.only('Applicants endpoints', () => {
 
     describe(`GET /api/applicants/postings/:posting_id`, () => {
         beforeEach('seed tables', () => {
-            helpers.seedApplicants(
+            return helpers.seedApplicants(
                 db,
                 testApplicants,
                 testPostings,
@@ -66,7 +66,7 @@ describe.only('Applicants endpoints', () => {
     })
     describe(`GET /api/applicants/user/:user_id`, () => {
         beforeEach('seed tables', () => {
-            helpers.seedApplicants(
+            return helpers.seedApplicants(
                 db,
                 testApplicants,
                 testPostings,
@@ -106,7 +106,7 @@ describe.only('Applicants endpoints', () => {
 
     describe(`POST /api/applicants`, () => {
         beforeEach('seed tables', () => {
-            helpers.seedApplicants(
+            return helpers.seedApplicants(
                 db,
                 testApplicants,
                 testPostings,
@@ -167,7 +167,7 @@ describe.only('Applicants endpoints', () => {
 
     describe(`DELETE /api/applicants/:id`, () => {
         beforeEach('seed tables', () => {
-            helpers.seedApplicants(
+            return helpers.seedApplicants(
                 db,
                 testApplicants,
                 testPostings,
