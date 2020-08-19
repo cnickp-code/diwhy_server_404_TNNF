@@ -189,7 +189,6 @@ describe(`Postings Endpoints`, () => {
                     expect(res.body.title).to.eql(newPosting.title)
                     expect(res.body.user_id).to.eql(newPosting.user_id)
                     expect(res.body.category).to.eql(newPosting.category)
-                    expect(res.body.date_created).to.eql(newPosting.date_created)
                     expect(res.body.content).to.eql(newPosting.content)
                 })
                 .then(res => {

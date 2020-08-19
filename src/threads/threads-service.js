@@ -12,6 +12,7 @@ const ThreadsService = {
                     'threads.id AS thread_id'
                 )
             )
+            .select('users.date_created AS user_created')
             .orderBy('thread_id')
     },
     getThreadById(knex, id) {
@@ -21,6 +22,7 @@ const ThreadsService = {
             .join('users', 'users.id', 'user_id')
             .select('*')
             .select('threads.id AS thread_id')
+            .select('users.date_created AS user_created')
             .where('threads.id', id)
             .first()
     },
@@ -35,6 +37,7 @@ const ThreadsService = {
                     'threads.id AS thread_id'
                 )
             )
+            .select('users.date_created AS user_created')
             .where('user_id', userId)
             .orderBy('thread_id')
     },
@@ -49,6 +52,7 @@ const ThreadsService = {
                     'threads.id AS thread_id'
                 )
             )
+            .select('users.date_created AS user_created')
             .where('category', catId)
             .orderBy('thread_id')
     },

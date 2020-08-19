@@ -6,6 +6,7 @@ const CommentsService = {
             .join('users', 'users.id', 'user_id')
             // .select('users.id AS userId')
             .select('comments.id AS comment_id')
+            .select('users.date_created AS user_created')
             .where({ thread_id })
             .orderBy('comment_id')
     },
@@ -15,6 +16,7 @@ const CommentsService = {
             .from('comments')
             .join('users', 'users.id', 'user_id')
             .select('comments.id AS comment_id')
+            .select('users.date_created AS user_created')
             .where('comments.id', id)
             .first()
     },
@@ -24,6 +26,7 @@ const CommentsService = {
             .from('comments')
             .join('users', 'users.id', 'user_id')
             .select('comments.id AS comment_id')
+            .select('users.date_created AS user_created')
             .where({ user_id })
             .orderBy('comment_id')
     },

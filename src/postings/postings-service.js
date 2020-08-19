@@ -5,6 +5,7 @@ const PostingsService = {
             .from('postings')
             .join('users', 'users.id', 'user_id')
             .select('postings.id AS posting_id')
+            .select('users.date_created AS user_created')
             .orderBy('posting_id')
     },
     getPostingsByCategory(db, category_id) {
@@ -13,6 +14,7 @@ const PostingsService = {
             .from('postings')
             .join('users', 'users.id', 'user_id')
             .select('postings.id AS posting_id')
+            .select('users.date_created AS user_created')
             .where({ category: category_id })
             .orderBy('posting_id')
     },
@@ -22,6 +24,7 @@ const PostingsService = {
             .from('postings')
             .join('users', 'users.id', 'user_id')
             .select('postings.id AS posting_id')
+            .select('users.date_created AS user_created')
             .where({ user_id })
             .orderBy('posting_id')
     },
@@ -31,6 +34,7 @@ const PostingsService = {
             .from('postings')
             .join('users', 'users.id', 'user_id')
             .select('postings.id AS posting_id')
+            .select('users.date_created AS user_created')
             .where('postings.id', id)
             .orderBy('posting_id')
             .first()

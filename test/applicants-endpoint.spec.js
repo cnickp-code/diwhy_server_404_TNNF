@@ -5,7 +5,7 @@ const helpers = require('./test-helpers');
 const { expect } = require('chai');
 const applicantsRouter = require('../src/posting_applicants/posting_applicants-router');
 
-describe.only('Applicants endpoints', () => {
+describe('Applicants endpoints', () => {
     let db;
 
     const testApplicants = helpers.makeApplicantsArray();

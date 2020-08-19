@@ -33,6 +33,8 @@ threadsRouter
             user_id
         }
 
+        console.log(newThread);
+
         for(const [key, value] of Object.entries(newThread)) {
             if(value == null) {
                 return res.status(404).json({
