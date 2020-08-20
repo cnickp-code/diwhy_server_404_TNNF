@@ -1,6 +1,7 @@
 const express = require('express')
 const path= require('path')
 const UserService = require('./user-service')
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const userRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -62,6 +63,20 @@ userRouter
         } catch(error) {
             next(error)
         }
+    })
+
+userRouter
+    .route('/:user_name')
+    .get(requireAuth, (req, res, next) => {
+        const knex = req.app.get('db')
+        const { user_name } = req.params;
+
+        UserService.getUserInfo(knex, user_name)
+            .then(user => {
+                res
+                    .status(200)
+                    .json(UserService.serializeUser(user))
+            })
     })
 
 module.exports = userRouter

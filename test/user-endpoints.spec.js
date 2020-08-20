@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
+const supertest = require('supertest')
 
 describe('User Endpoints', function () {
     let db
@@ -18,6 +19,24 @@ describe('User Endpoints', function () {
     before('cleanup', () => helpers.cleanTables(db))
 
     afterEach('cleanup', () => helpers.cleanTables(db))
+
+    describe(`GET /api/user/:user_name`, () => {
+        beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
+
+
+        it.only('Responds with 200 and corresponding user info', () => {
+            const user_name = 'test-user-1';
+            let expectedUser = testUsers.find(user => user.user_name === user_name)
+    
+            delete expectedUser.password;
+            
+            return supertest(app)
+            .get(`/api/user/${user_name}`)
+            .set('Authorization', helpers.makeAuthHeader(testUser))
+            .expect(200, expectedUser)
+        })
+
+    })
 
     describe(`POST /api/user`, () => {
         beforeEach('insert users', () => helpers.seedUsers(db, testUsers))

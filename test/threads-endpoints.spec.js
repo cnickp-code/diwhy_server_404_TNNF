@@ -127,7 +127,7 @@ describe(`Threads endpoints`, () => {
         })
     })
 
-    describe.only(`GET /api/threads/user/:user_id`, () => {
+    describe(`GET /api/threads/user/:user_id`, () => {
         context('Given valid user', () => {
             beforeEach('insert test threads', () => {
                 return helpers.seedThreads(
@@ -160,7 +160,7 @@ describe(`Threads endpoints`, () => {
         })
     })
 
-    describe.only(`POST /api/threads`, () => {
+    describe(`POST /api/threads`, () => {
         context('Should return 201 and the posted thread', () => {
             beforeEach('insert test threads', () => {
                 return helpers.seedThreads(

@@ -48,12 +48,18 @@ const UserService = {
     hashPassword(password) {
         return bcrypt.hash(password, 12)
     },
+    getUserInfo(knex, user_name) {
+        return knex
+            .from('users')
+            .select('*')
+            .where({ user_name })
+            .first()
+    },
     serializeUser(user) {
         return {
             id: user.id,
             user_name: user.user_name,
             email: user.email,
-            date_created: user.date_created
         }
     }
 }

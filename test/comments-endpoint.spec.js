@@ -131,7 +131,7 @@ describe(`Comments Endpoints`, () => {
 
                 return newObj;
             })
-            console.log(expectedComments)
+            
             return supertest(app)
                 .delete(`/api/comments/${commentId}`)
                 .set('Authorization', helpers.makeAuthHeader(testUser))
