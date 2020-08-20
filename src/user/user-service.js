@@ -60,7 +60,8 @@ const UserService = {
             id: user.id,
             user_name: user.user_name,
             email: user.email,
-            endorsements: user.endorsements
+            endorsements: user.endorsements,
+            profile_pic: user.profile_pic
         }
     }
 }

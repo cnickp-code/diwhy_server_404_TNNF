@@ -29,7 +29,13 @@ describe('User Endpoints', function () {
             let expectedUser = testUsers.find(user => user.user_name === user_name)
     
             delete expectedUser.password;
-            
+
+            expectedUser = {
+                ...expectedUser,
+                endorsements: 0,
+                profile_pic: 'https://i.pinimg.com/originals/f9/4f/37/f94f37eb1fbdfb5d49dc97e711a35289.jpg'
+            }
+
             return supertest(app)
             .get(`/api/user/${user_name}`)
             .set('Authorization', helpers.makeAuthHeader(testUser))
