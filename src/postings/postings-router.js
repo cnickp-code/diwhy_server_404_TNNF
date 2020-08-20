@@ -23,9 +23,9 @@ postingsRouter
     })
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { title, content, category } = req.body
+            const { title, content, category, accepted_app } = req.body
             const  user_id = req.user.id
-            const newPosting = { title, content, user_id, category }
+            const newPosting = { title, content, user_id, category, accepted_app }
 
             const insertedPosting = await PostingsService.insertPosting(
                 req.app.get('db'),
@@ -74,8 +74,8 @@ postingsRouter
     })
     .patch(jsonBodyParser, async (req, res, next) => {
         try {
-            const { title, content } = req.body
-            const updateData = { title, content }
+            const { title, content, accepted_app } = req.body
+            const updateData = { title, content, accepted_app }
             const updatedPosting = await PostingsService.updatePosting(
                 req.app.get('db'),
                 req.params.posting_id,

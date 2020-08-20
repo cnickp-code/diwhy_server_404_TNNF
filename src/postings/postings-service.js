@@ -68,7 +68,8 @@ const PostingsService = {
             user_name: posting.user_name,
             category: posting.category,
             date_created: posting.date_created,
-            content: posting.content
+            content: posting.content,
+            accepted_app: posting.accepted_app
         }
     }
 }

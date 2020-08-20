@@ -110,7 +110,8 @@ function makePostingsArray() {
             user_id: 1,
             category: 1,
             date_created: new Date().toISOString(),
-            content: 'Hello world 1'
+            content: 'Hello world 1',
+            accepted_app: null,
         },
         {
             id: 2,
@@ -118,7 +119,8 @@ function makePostingsArray() {
             user_id: 1,
             category: 2,
             date_created: new Date().toISOString(),
-            content: 'Hello world 2'
+            content: 'Hello world 2',
+            accepted_app: null,
         },
         {
             id: 3,
@@ -126,7 +128,8 @@ function makePostingsArray() {
             user_id: 2,
             category: 3,
             date_created: new Date().toISOString(),
-            content: 'Hello world 3'
+            content: 'Hello world 3',
+            accepted_app: null,
         },
     ]
 }

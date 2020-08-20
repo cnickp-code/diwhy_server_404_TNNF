@@ -3,7 +3,7 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe(`Postings Endpoints`, () => {
+describe.only(`Postings Endpoints`, () => {
     let db
 
 
@@ -168,6 +168,7 @@ describe(`Postings Endpoints`, () => {
                     title: 'Test posting 4',
                     user_id: 1,
                     category: 1,
+                    accepted_app: false,
                     date_created: new Date().toISOString(),
                     content: 'Hello world 4'
                 }
@@ -189,6 +190,7 @@ describe(`Postings Endpoints`, () => {
                     expect(res.body.title).to.eql(newPosting.title)
                     expect(res.body.user_id).to.eql(newPosting.user_id)
                     expect(res.body.category).to.eql(newPosting.category)
+                    expect(res.body.accepted_app).to.eql(newPosting.accepted_app)
                     expect(res.body.content).to.eql(newPosting.content)
                 })
                 .then(res => {
@@ -278,7 +280,8 @@ describe(`Postings Endpoints`, () => {
                 let newPosting = {
                     ...postingToUpdate,
                     title: 'New Posting Who Dis',
-                    content: 'New Content Who Dat'
+                    content: 'New Content Who Dat',
+                    accepted_app: 'Swaggatha',
                 }
 
                 let user = testUsers.find(user => user.id === newPosting.user_id);

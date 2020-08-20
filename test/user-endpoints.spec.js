@@ -24,7 +24,7 @@ describe('User Endpoints', function () {
         beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
 
-        it.only('Responds with 200 and corresponding user info', () => {
+        it('Responds with 200 and corresponding user info', () => {
             const user_name = 'test-user-1';
             let expectedUser = testUsers.find(user => user.user_name === user_name)
     
