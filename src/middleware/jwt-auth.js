@@ -14,7 +14,6 @@ async function requireAuth(req, res, next) {
     try {
         const payload = AuthService.verifyJwt(bearerToken)
 
-
         const user = await AuthService.getUserWithEmail(
             req.app.get('db'),
             payload.email

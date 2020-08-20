@@ -60,6 +60,7 @@ const UserService = {
             id: user.id,
             user_name: user.user_name,
             email: user.email,
+            endorsements: user.endorsements
         }
     }
 }

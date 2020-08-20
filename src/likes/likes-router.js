@@ -32,7 +32,7 @@ likesRouter
 likesRouter
     .route('/thread/:thread_id')
     .all(requireAuth)
-    .get(async, (req, res, next) => {
+    .get(async (req, res, next) => {
         const knex = req.app.get('db')
         const { thread_id } = req.params;
 
