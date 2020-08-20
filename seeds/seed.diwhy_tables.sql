@@ -7,19 +7,20 @@ TRUNCATE
     threads,
     comments,
     postings,
-    posting_applicants
+    posting_applicants,
+    likes
     RESTART IDENTITY CASCADE;
 
 INSERT INTO users (user_name, email, password)
 VALUES
     ('Swaggatha', 'test@test.com', '$2a$12$nEuCrDTcCPllpYUAXoTHXudUicbfPFyYdfDonimIK./3tfivD7PrO');
 
-INSERT INTO users_interests (user_id, category_id)
-VALUES 
-    (1, 1),
-    (1, 2),
-    (1, 6),
-    (1, 7);
+-- INSERT INTO users_interests (user_id, category_id)
+-- VALUES 
+--     (1, 1),
+--     (1, 2),
+--     (1, 6),
+--     (1, 7);
 
 INSERT INTO categories(name)
 VALUES
