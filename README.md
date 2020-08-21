@@ -1,6 +1,6 @@
 # DIWHY API
 
-![GitHub package.json version]()
+![GitHub package.json version](https://img.shields.io/github/package-json/v/thinkful-ei-orka/diwhy_server_404_TNNF?style=plastic)
 
 Programmed by **Carlo Paredes, Magdalena Painter, Jon Oliver, Agatha North, and Victor Jarvis** for Thinkful's Software Engineering Immersion Program.
 
