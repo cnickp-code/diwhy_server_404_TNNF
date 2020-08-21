@@ -81,4 +81,29 @@ userRouter
             })
     })
 
+userRouter
+    .route('/:id')
+    .all(requireAuth)
+    .patch(jsonBodyParser, (req, res, next) => {
+        const knex = req.app.get('db')
+        const { profile_pic, intro, endorsements, email } = req.body;
+        const id = req.params.id;
+
+        let updatedUser = {
+            profile_pic,
+            intro,
+            endorsements,
+            email
+        }
+
+        console.log(updatedUser);
+
+        UserService.updateUserInfoById(knex, id, updatedUser)
+            .then(user => {
+                res.status(202).json(UserService.serializeUser(user));
+            })
+            .catch(next);
+
+    })
+
 module.exports = userRouter

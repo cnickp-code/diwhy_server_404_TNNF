@@ -42,7 +42,10 @@ authRouter
             const payload = {
                 userId: dbUser.id,
                 email: dbUser.email,
-                user_name: dbUser.user_name
+                user_name: dbUser.user_name,
+                intro: dbUser.intro,
+                profile_pic: dbUser.profile_pic,
+                endorsements: dbUser.endorsements
             }
             
             res.send({
