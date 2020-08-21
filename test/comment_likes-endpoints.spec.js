@@ -3,7 +3,7 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only(`Comment Likes Endpoints`, () => {
+describe(`Comment Likes Endpoints`, () => {
     let db
 
     const testCommentLikes = helpers.makeCommentLikesArray();

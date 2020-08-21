@@ -55,13 +55,20 @@ const UserService = {
             .where({ user_name })
             .first()
     },
+    updateUserInfoById(knex, id, newInfo) {
+        return knex
+            .from('users')
+            .where({ id })
+            .update(newInfo)
+    },
     serializeUser(user) {
         return {
             id: user.id,
             user_name: user.user_name,
             email: user.email,
             endorsements: user.endorsements,
-            profile_pic: user.profile_pic
+            profile_pic: user.profile_pic,
+            intro: user.intro
         }
     }
 }

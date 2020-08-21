@@ -3,7 +3,7 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only(`Likes Endpoints`, () => {
+describe(`Likes Endpoints`, () => {
     let db
 
     const testThreads = helpers.makeThreadsArray();

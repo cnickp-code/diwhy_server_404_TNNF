@@ -44,6 +44,33 @@ describe('User Endpoints', function () {
 
     })
 
+    describe(`PATCH /api/user/:id`, () => {
+        beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
+
+        it.only('Responds with 202 and updated item', () => {
+            const idToChange = 1;
+            const user = testUsers[idToChange - 1];
+
+            let newUser = {
+                ...user,
+                intro: true,
+                email: 'change@change.com'
+            }
+
+            return supertest(app)
+                .patch(`/api/user/${idToChange}`)
+                .set('Authorization', helpers.makeAuthHeader(testUser))
+                .send(newUser)
+                .expect(202)
+                .then(res => {
+                    return supertest(app)
+                        .get(`/api/user/${user.user_name}`)
+                        .set('Authorization', helpers.makeAuthHeader(testUser))
+                        .expect(200, newUser)
+                })
+        })
+    })
+
     describe(`POST /api/user`, () => {
         beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
