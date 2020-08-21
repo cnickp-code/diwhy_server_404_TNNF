@@ -1,16 +1,17 @@
 
 const UserInterestsService = {
-    getUserInterests(db, user_id) {
+    getUserInterests(db, user_name) {
         return db
             .from('users_interests')
             .join('categories', 'categories.id', 'category_id')
+            .join('users', 'users.id', 'user_id')
             .select('*')
             .select(
                 db.raw(
                     '"users_interests"."id" AS "interests_id"'
                 )
             )
-            .where({ user_id })
+            .where({ user_name })
             // .orderBy('id')
     },
     getUserInterestById(db, id) {
@@ -44,6 +45,7 @@ const UserInterestsService = {
         return {
             id: interest.id,
             user_id: interest.user_id,
+            category_id: interest.category_id,
             category: interest.name
         }
     },

@@ -9,8 +9,9 @@ interestsRouter
     .route('/')
     .all(requireAuth)
     .get(async (req, res, next) => {
+        const { user_name } = req.body;
         try {
-            UserInterestsService.getUserInterests(req.app.get('db'), req.user.id)
+            UserInterestsService.getUserInterests(req.app.get('db'), user_name)
                 .then(interests => {
                     const newInterests = interests.map(interest => {
                         return UserInterestsService.serializeInterestDetails(interest);
