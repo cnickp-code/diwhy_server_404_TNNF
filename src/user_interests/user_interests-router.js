@@ -58,6 +58,22 @@ interestsRouter
     })
 
 interestsRouter
+    .route('/user/:user_name')
+    .all(requireAuth)
+    .get(async (req, res, next) => {
+        const knex = req.app.get('db')
+        const user_name = req.params.user_name
+
+        UserInterestsService.getUserInterests(knex, user_name)
+            .then(interests => {
+                const newInterests = interests.map(int => {
+                    return UserInterestsService.serializeInterestDetails(int);
+                })
+                res.status(200).json(newInterests);
+            })
+    })
+
+interestsRouter
     .route('/:id')
     .delete(async (req, res, next) => {
         try {
