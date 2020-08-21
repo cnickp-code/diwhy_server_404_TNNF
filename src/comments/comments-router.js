@@ -19,13 +19,13 @@ commentsRouter
             )
 
             res.status(201).json(CommentsService.serializeComment(insertComment))
-        } catch(error) {
+        } catch (error) {
             next(error)
         }
     })
 
 commentsRouter
-    .route('/thread/:thread') 
+    .route('/thread/:thread')
     .all(requireAuth)
     .get(async (req, res, next) => {
         try {
@@ -40,13 +40,13 @@ commentsRouter
 
 
             res.status(200).json(newComments)
-        } catch(error) {
+        } catch (error) {
             next(error)
         }
     })
 
 commentsRouter
-    .route('/:comment_id') // TALK ABOUT CHANGING THIS
+    .route('/:comment_id')
     .all(requireAuth)
     .all((req, res, next) => {
         const knex = req.app.get('db')
@@ -54,7 +54,7 @@ commentsRouter
 
         CommentsService.getCommentById(knex, comment_id)
             .then(comment => {
-                if(!comment) {
+                if (!comment) {
                     return res.status(404).json({
                         error: { message: `Comment does not exist` }
                     })
@@ -74,7 +74,7 @@ commentsRouter
                 req.params.comment_id
             )
             res.status(204).end()
-        } catch(error) {
+        } catch (error) {
             next(error)
         }
     })
@@ -92,7 +92,7 @@ commentsRouter
                 req.params.comment_id
             )
             res.status(202).json(CommentsService.serializeComment(updatedComments))
-        } catch(error) {
+        } catch (error) {
             next(error)
         }
     })
