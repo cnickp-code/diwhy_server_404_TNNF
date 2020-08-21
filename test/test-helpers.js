@@ -204,6 +204,27 @@ function makeLikesArray() {
     ]
 }
 
+function makeCommentLikesArray() {
+    return [
+        {
+            id: 1,
+            comment_id: 1,
+            user_id: 1,
+        },
+        {
+            id: 2,
+            comment_id: 1,
+            user_id: 2,
+        },
+        {
+            id: 3,
+            comment_id: 2,
+            user_id: 1,
+        },
+
+    ]
+}
+
 function seedUserInterests(db, interests) {
     return db
         .insert(interests)
@@ -309,6 +330,19 @@ function seedLikes(db, likes, threads, users, categories) {
     })
 }
 
+function seedCommentLikes(db, likes, comments, threads, users, categories) {
+    return db.transaction(async trx => {
+        await seedComments(trx, comments, threads, users, categories)
+        await trx.into('comment_likes').insert(likes.map(like => {
+            let { id, ...newLike } = like;
+
+            return newLike;
+        }))
+        await trx.raw(`SELECT setval('comment_likes_id_seq', ?)`, [likes[likes.length - 1].id])
+    
+    })
+}
+
 function seedApplicants(db, applicants, postings, users, categories) {
     return db.transaction(async trx => {
         await seedPostings(trx, postings, categories, users)
@@ -326,6 +360,7 @@ function cleanTables(db) {
     return db.transaction(trx =>
         trx.raw(
             `
+            TRUNCATE comment_likes CASCADE;
             TRUNCATE likes CASCADE;
             TRUNCATE posting_applicants CASCADE;
             TRUNCATE postings CASCADE;
@@ -338,6 +373,7 @@ function cleanTables(db) {
         )
             .then(() =>
                 Promise.all([
+                    trx.raw(`ALTER SEQUENCE comment_likes_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE likes_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE posting_applicants_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE postings_id_seq minvalue 0 START WITH 1`),
@@ -346,6 +382,7 @@ function cleanTables(db) {
                     trx.raw(`ALTER SEQUENCE users_interests_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE categories_id_seq minvalue 0 START WITH 1`),
                     trx.raw(`ALTER SEQUENCE users_id_seq minvalue 0 START WITH 1`),
+                    trx.raw(`SELECT setval('comment_likes_id_seq', 0)`),
                     trx.raw(`SELECT setval('likes_id_seq', 0)`),
                     trx.raw(`SELECT setval('posting_applicants_id_seq', 0)`),
                     trx.raw(`SELECT setval('postings_id_seq', 0)`),
@@ -370,6 +407,7 @@ module.exports = {
     makeCommentsArray,
     makeApplicantsArray,
     makeLikesArray,
+    makeCommentLikesArray,
     cleanTables,
     seedUsers,
     seedCategories,
@@ -380,4 +418,5 @@ module.exports = {
     seedComments,
     seedApplicants,
     seedLikes,
+    seedCommentLikes
 }

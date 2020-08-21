@@ -1,10 +1,15 @@
 const LikesService = {
+    // getLikesByThreadId(db, thread_id) {
+    //     return db
+    //         .count('*')
+    //         .from('likes')
+    //         .where({ thread_id })
+    // },
     getLikesByThreadId(db, thread_id) {
         return db
             .select('*')
             .from('likes')
             .where({ thread_id })
-            .orderBy('id')
     },
     insertLikes(db, newLike) {
         return db
@@ -18,7 +23,10 @@ const LikesService = {
     deleteLike(db, user_id, thread_id) {
         return db
             .from('likes')
-            .whereIn(['user_id', 'thread_id'], [user_id, thread_id])
+            .where({
+                user_id,
+                thread_id
+            })
             .delete()
     }
 }

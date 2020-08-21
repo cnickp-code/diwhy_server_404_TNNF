@@ -1,42 +1,40 @@
 const express = require('express')
-const LikesService = require('./likes-service')
+const CommentLikesService = require('./comment_likes-service')
 const { requireAuth } = require('../middleware/jwt-auth');
-const { json } = require('express');
-const { route } = require('../user/user-router');
 
-const likesRouter = express.Router();
+const commentLikesRouter = express.Router();
 const jsonBodyParser = express.json();
 
-likesRouter
+commentLikesRouter
     .route('/')
     .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {
         const knex = req.app.get('db')
-        const { thread_id } = req.body;
+        const { comment_id } = req.body;
         const user_id = req.user.id;
 
         const newLike = {
             user_id,
-            thread_id
+            comment_id
         }
 
-        LikesService.insertLikes(knex, newLike)
+        CommentLikesService.insertCommentLikes(knex, newLike)
             .then(like => {
                 res
                     .status(201)
-                    .location(`/api/likes/${like.id}`)
+                    .location(`/api/comment_likes/${like.id}`)
                     .json(like)
             })
     })
 
-likesRouter
-    .route('/thread/:thread_id')
+commentLikesRouter
+    .route('/comment/:comment_id')
     .all(requireAuth)
     .get(async (req, res, next) => {
         const knex = req.app.get('db')
-        const { thread_id } = req.params;
+        const { comment_id } = req.params;
 
-        LikesService.getLikesByThreadId(knex, thread_id)
+        CommentLikesService.getLikesByCommentId(knex, comment_id)
             .then(likes => {
                 res
                     .status(200)
@@ -44,15 +42,15 @@ likesRouter
             })
     })
     .delete(jsonBodyParser, (req, res, next) => {
-        const knex = req.app.get('db');
-        const { thread_id } = req.params;
-        const user_id = req.user.id;
-    
-        LikesService.deleteLike(knex, user_id, thread_id)
+        const knex = req.app.get('db')
+        const { comment_id } = req.params;
+        const user_id = req.user.id
+
+        CommentLikesService.deleteCommentLike(knex, user_id, comment_id)
             .then(() => {
-                res.status(204).end();
+                res.status(204).end()
             })
             .catch(next);
     })
 
-module.exports = likesRouter
+module.exports = commentLikesRouter

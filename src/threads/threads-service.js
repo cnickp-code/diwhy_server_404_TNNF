@@ -82,6 +82,7 @@ const ThreadsService = {
             title: thread.title,
             user_id: thread.user_id,
             user_name: thread.user_name,
+            user_pic: thread.profile_pic,
             category: thread.category,
             date_created: thread.date_created,
             content: thread.content

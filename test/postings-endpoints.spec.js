@@ -3,7 +3,7 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only(`Postings Endpoints`, () => {
+describe(`Postings Endpoints`, () => {
     let db
 
 

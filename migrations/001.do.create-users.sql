@@ -4,7 +4,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     email TEXT NOT NULL,
     endorsements INT DEFAULT 0 NOT NULL,
-    profile_pic TEXT DEFAULT 'https://i.pinimg.com/originals/f9/4f/37/f94f37eb1fbdfb5d49dc97e711a35289.jpg' NOT NULL,
+    profile_pic TEXT DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' NOT NULL,
     date_created TIMESTAMPTZ DEFAULT now() NOT NULL,
     date_modified TIMESTAMPTZ
 );

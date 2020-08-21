@@ -61,6 +61,7 @@ const CommentsService = {
             user_id: comment.user_id,
             thread_id: comment.thread_id,
             user_name: comment.user_name,
+            user_pic: comment.profile_pic,
             date_created: comment.date_created
         }
     }

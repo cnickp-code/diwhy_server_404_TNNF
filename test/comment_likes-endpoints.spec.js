@@ -3,9 +3,11 @@ const app = require('../src/app')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only(`Likes Endpoints`, () => {
+describe.only(`Comment Likes Endpoints`, () => {
     let db
 
+    const testCommentLikes = helpers.makeCommentLikesArray();
+    const testComments = helpers.makeCommentsArray();
     const testThreads = helpers.makeThreadsArray();
     const testCategories = helpers.makeCategoriesArray()
     const testUsers = helpers.makeUsersArray()
@@ -23,121 +25,98 @@ describe.only(`Likes Endpoints`, () => {
 
     describe(`POST /api/likes`, () => {
         beforeEach('insert test likes, threads, users, categories', () => {
-            return helpers.seedLikes(
+            return helpers.seedCommentLikes(
                 db,
-                testLikes,
+                testCommentLikes,
+                testComments,
                 testThreads,
                 testUsers,
                 testCategories
             )
         })
 
-        it('Responds 201 with the inserted like', () => {
+        it('Responds with 201 with the inserted comment like', () => {
             const newLike = {
                 id: 4,
-                thread_id: 2,
+                comment_id: 2,
                 user_id: 1,
             }
 
-            let expectedLikes = [...testLikes, newLike];
-            expectedLikes = expectedLikes.filter(like => like.thread_id === newLike.thread_id)
-            // let count = 0;
-            // expectedLikes.forEach(like => {
-            //     if(like.thread_id === newLike.thread_id) {
-            //         count++;
-            //     }
-            // })
-
-            // count = count.toString();
-
+            let expectedLikes = [...testCommentLikes, newLike]
+            expectedLikes = expectedLikes.filter(like => like.comment_id === newLike.comment_id)
 
             return supertest(app)
-                .post(`/api/likes`)
+                .post(`/api/comment_likes`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
                 .send(newLike)
                 .expect(201)
                 .expect(res => {
                     expect(res.body).to.be.an('object')
-                    expect(res.body.thread_id).to.be.eql(newLike.thread_id)
+                    expect(res.body.comment_id).to.be.eql(newLike.comment_id)
                     expect(res.body.user_id).to.be.eql(newLike.user_id)
                 })
                 .then(res => {
                     return supertest(app)
-                        .get(`/api/likes/thread/${newLike.thread_id}`)
+                        .get(`/api/comment_likes/comment/${newLike.comment_id}`)
                         .set('Authorization', helpers.makeAuthHeader(validUser))
                         .expect(200, expectedLikes)
                 })
         })
+
     })
 
-    describe(`DELETE /api/likes/thread/:thread_id`, () => {
+    describe(`DELETE /api/comment_likes/comment/:comment_id`, () => {
         beforeEach('insert test likes, threads, users, categories', () => {
-            return helpers.seedLikes(
+            return helpers.seedCommentLikes(
                 db,
-                testLikes,
+                testCommentLikes,
+                testComments,
                 testThreads,
                 testUsers,
                 testCategories
             )
         })
 
-        it('Responds 204 for deleted like', () => {
-            const threadId = 1;
+        it(`Responds with 204 for deleted like`, () => {
+            const commentId = 1;
             const likeId = 1;
 
-            let expectedLikes = testLikes.filter(like => like.id !== likeId)
-            let deletedLike = testLikes.find(like => like.id === likeId)
-            expectedLikes = expectedLikes.filter(like => deletedLike.thread_id === like.thread_id)
-
-            // let count = expectedLikes.length.toString();
-
+            let expectedLikes = testCommentLikes.filter(like => like.id !== likeId)
+            expectedLikes = expectedLikes.filter(like => like.comment_id === commentId)
 
             return supertest(app)
-                .delete(`/api/likes/thread/${threadId}`)
+                .delete(`/api/comment_likes/comment/${commentId}`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
                 .expect(204)
                 .then(res => {
                     return supertest(app)
-                        .get(`/api/likes/thread/${deletedLike.thread_id}`)
+                        .get(`/api/comment_likes/comment/${commentId}`)
                         .set('Authorization', helpers.makeAuthHeader(validUser))
-                        .expect(200, expectedLikes)
+                        expect(200, expectedLikes)
                 })
         })
-
     })
 
-    describe(`GET /api/likes/thread/:thread_id`, () => {
+    describe(`GET /api/comment_likes/comment/:comment_id`, () => {
         beforeEach('insert test likes, threads, users, categories', () => {
-            return helpers.seedLikes(
+            return helpers.seedCommentLikes(
                 db,
-                testLikes,
+                testCommentLikes,
+                testComments,
                 testThreads,
                 testUsers,
                 testCategories
-                
             )
         })
 
-        it('Responds with 200 and corresponding likes', () => {
-            const threadId = 1;
-            let count = 0;
-            let expectedLikes = testLikes.filter(like => like.thread_id === threadId)
-            // testLikes.forEach(like => {
-            //     if(like.thread_id === threadId){
-            //         count++;
-            //     }
-            // })
-
-            // count = count.toString();
-
-            // tempLikes = tempLikes.map(like => {
-
-            // })
+        it('Responds with 200 and corresponding comment likes', () => {
+            const commentId = 1;
+            let expectedLikes = testCommentLikes.filter(like => like.comment_id === commentId)
 
             return supertest(app)
-                .get(`/api/likes/thread/${threadId}`)
+                .get(`/api/comment_likes/comment/${commentId}`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
-                .expect(200, expectedLikes);
+                .expect(200, expectedLikes)
         })
     })
 })
