@@ -9,6 +9,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Live Client Project Link: <https://diwhy-client-404-tnnf.vercel.app/>
 
+DIWHY is a social media platform designed for DIY enthusiasts, hobbyists, and professionals alike to ask for and give advice on projects and other DIY needs.
+
 ## API Documentation
 
 ---
@@ -441,13 +443,3 @@ _Content:_ postedApplicant
 **Success Response**<br />
 _Code:_ 204<br />
 _Content:_ postedApplicant
-
-<!-- ## URLs (this is probably just for us to lay out each url to put in each method section, unless it's better to lay them out here?)
-
-**Users:** '/api/user'
-**Interests:** '/api/interests'
-**Categories:** '/api/categories', '/api/categories/:id'
-**Threads:** '/api/threads', '/api/threads/:id'
-**Comments:** '/api/comments'
-**Postings:** '/api/postings', '/api/postings/:id'
-**Applicants:** '/api/applicants' -->
