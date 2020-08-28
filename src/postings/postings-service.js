@@ -6,7 +6,7 @@ const PostingsService = {
             .join('users', 'users.id', 'user_id')
             .select('postings.id AS posting_id')
             .select('users.date_created AS user_created')
-            .orderBy('posting_id')
+            .orderBy('posting_id');
     },
     getPostingsByCategory(db, category_id) {
         return db
@@ -16,7 +16,7 @@ const PostingsService = {
             .select('postings.id AS posting_id')
             .select('users.date_created AS user_created')
             .where({ category: category_id })
-            .orderBy('posting_id')
+            .orderBy('posting_id');
     },
     getPostingsByUser(db, user_id) {
         return db
@@ -26,7 +26,7 @@ const PostingsService = {
             .select('postings.id AS posting_id')
             .select('users.date_created AS user_created')
             .where({ user_id })
-            .orderBy('posting_id')
+            .orderBy('posting_id');
     },
     getPostingById(db, id) {
         return db
@@ -37,13 +37,13 @@ const PostingsService = {
             .select('users.date_created AS user_created')
             .where('postings.id', id)
             .orderBy('posting_id')
-            .first()
+            .first();
     },
     deletePosting(db, id) {
         return db
             .from('postings')
             .where({ id })
-            .delete()
+            .delete();
     },
     insertPosting(db, newPosting) {
         return db
@@ -51,14 +51,14 @@ const PostingsService = {
             .into('postings')
             .returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
     updatePosting(db, id, data) {
         return db
             .from('postings')
             .where({ id })
-            .update(data)
+            .update(data);
     },
     serializePosting(posting) {
         return {
@@ -70,8 +70,8 @@ const PostingsService = {
             date_created: posting.date_created,
             content: posting.content,
             accepted_app: posting.accepted_app
-        }
+        };
     }
-}
+};
 
 module.exports = PostingsService

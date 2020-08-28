@@ -1,4 +1,3 @@
-
 const UserInterestsService = {
     getUserInterests(db, user_name) {
         return db
@@ -11,14 +10,14 @@ const UserInterestsService = {
                     '"users_interests"."id" AS "interests_id"'
                 )
             )
-            .where({ user_name })
-            // .orderBy('id')
+            .where({ user_name });
+        // .orderBy('id')
     },
     getUserInterestById(db, id) {
         return db
             .select('*')
             .from('users_interests')
-            .where({ id })
+            .where({ id });
     },
     insertUserInterest(db, newInterest) {
         return db
@@ -26,20 +25,20 @@ const UserInterestsService = {
             .into('users_interests')
             .returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
     deleteUserInterest(db, id) {
         return db('users_interests')
             .where({ id })
-            .delete()
+            .delete();
     },
     serializeInterests(interest) {
         return {
             id: interest.id,
             user_id: interest.user_id,
             category_id: interest.category_id
-        }
+        };
     },
     serializeInterestDetails(interest) {
         return {
@@ -47,14 +46,14 @@ const UserInterestsService = {
             user_id: interest.user_id,
             category_id: interest.category_id,
             category: interest.name
-        }
+        };
     },
     hasInterest(db, user_id, category_id) {
         return db('users_interests')
             .where({ user_id, category_id })
             .first()
-            .then(interest => !!interest)
+            .then(interest => !!interest);
     }
-}
+};
 
-module.exports = UserInterestsService;
+module.exports = UserInterestsService

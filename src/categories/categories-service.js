@@ -5,7 +5,7 @@ const CategoriesService = {
         return knex
             .from('categories')
             .select('*')
-            .orderBy('id')
+            .orderBy('id');
     },
     getCategoryById(knex, id) {
         return knex
@@ -18,8 +18,8 @@ const CategoriesService = {
         return {
             id: item.id,
             name: xss(item.name)
-        }
+        };
     }
-}
+};
 
-module.exports = CategoriesService;
+module.exports = CategoriesService

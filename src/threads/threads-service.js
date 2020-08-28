@@ -1,4 +1,4 @@
-const xss = require('xss')
+const xss = require('xss');
 
 const ThreadsService = {
     getAllThreads(knex) {
@@ -13,7 +13,7 @@ const ThreadsService = {
                 )
             )
             .select('users.date_created AS user_created')
-            .orderBy('thread_id')
+            .orderBy('thread_id');
     },
     getThreadById(knex, id) {
         return knex
@@ -24,7 +24,7 @@ const ThreadsService = {
             .select('threads.id AS thread_id')
             .select('users.date_created AS user_created')
             .where('threads.id', id)
-            .first()
+            .first();
     },
     getThreadsByUserId(knex, userId) {
         return knex
@@ -39,7 +39,7 @@ const ThreadsService = {
             )
             .select('users.date_created AS user_created')
             .where('user_id', userId)
-            .orderBy('thread_id')
+            .orderBy('thread_id');
     },
     getThreadsByCategoryId(knex, catId) {
         return knex
@@ -54,7 +54,7 @@ const ThreadsService = {
             )
             .select('users.date_created AS user_created')
             .where('category', catId)
-            .orderBy('thread_id')
+            .orderBy('thread_id');
     },
     insertThread(knex, newThread) {
         return knex
@@ -64,7 +64,7 @@ const ThreadsService = {
             .returning('*')
             .then(rows => {
                 return rows[0]
-            })
+            });
     },
     deleteThread(knex, id) {
         return knex('threads')
@@ -74,7 +74,7 @@ const ThreadsService = {
     updateThread(knex, id, modifiedThread) {
         return knex('threads')
             .where({ id })
-            .update(modifiedThread)
+            .update(modifiedThread);
     },
     serializeThread(thread) {
         return {
@@ -86,8 +86,8 @@ const ThreadsService = {
             category: thread.category,
             date_created: thread.date_created,
             content: thread.content
-        }
+        };
     }
-}
+};
 
-module.exports = ThreadsService;
+module.exports = ThreadsService

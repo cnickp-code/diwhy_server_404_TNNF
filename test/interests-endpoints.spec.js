@@ -1,47 +1,47 @@
-const helpers = require('./test-helpers')
-const app = require('../src/app')
-const supertest = require('supertest')
+const helpers = require('./test-helpers');
+const app = require('../src/app');
+const supertest = require('supertest');
 
 describe(`Interests endpoints`, () => {
-    let db
+    let db;
 
-    const testInterests = helpers.makeInterestsArray()
-    const testCategories = helpers.makeCategoriesArray()
-    const testUsers = helpers.makeUsersArray()
-    const testUser = testUsers[0]
+    const testInterests = helpers.makeInterestsArray();
+    const testCategories = helpers.makeCategoriesArray();
+    const testUsers = helpers.makeUsersArray();
+    const testUser = testUsers[0];
 
     before('make knex instance', () => {
-        db = helpers.makeKnexInstance()
-        app.set('db', db)
-    })
+        db = helpers.makeKnexInstance();
+        app.set('db', db);
+    });
 
-    after('disconnect from db', () => db.destroy())
+    after('disconnect from db', () => db.destroy());
 
-    before('cleanup', () => helpers.cleanTables(db))
+    before('cleanup', () => helpers.cleanTables(db));
 
-    afterEach('cleanup', () => helpers.cleanTables(db))
+    afterEach('cleanup', () => helpers.cleanTables(db));
 
     describe(`GET /api/interests`, () => {
-        beforeEach('insert users', () => 
+        beforeEach('insert users', () =>
             helpers.seedUsers(
-                db, 
+                db,
                 testUsers
             )
-        )
+        );
 
-        beforeEach('insert categories', () => 
+        beforeEach('insert categories', () =>
             helpers.seedCategories(
                 db,
                 testCategories
             )
-        )
+        );
 
-        beforeEach('insert interests', () => 
+        beforeEach('insert interests', () =>
             helpers.seedUserInterests(
                 db,
                 testInterests
             )
-        )
+        );
 
         it('should return user interests', () => {
             const testInterestsDetails = [
@@ -60,28 +60,28 @@ describe(`Interests endpoints`, () => {
                     user_id: 1,
                     category: 'Metalworking'
                 }
-            ]
+            ];
             return supertest(app)
                 .get('/api/interests')
                 .set('Authorization', helpers.makeAuthHeader(testUser))
-                .expect(testInterestsDetails)
-        })
-    })
+                .expect(testInterestsDetails);
+        });
+    });
 
     describe(`POST /api/interests`, () => {
-        beforeEach('insert users', () => 
+        beforeEach('insert users', () =>
             helpers.seedUsers(
-                db, 
+                db,
                 testUsers
             )
-        )
+        );
 
-        beforeEach('insert categories', () => 
+        beforeEach('insert categories', () =>
             helpers.seedCategories(
                 db,
                 testCategories
             )
-        )
+        );
 
         it('responds users', () => {
             const newInterest = {
@@ -94,35 +94,35 @@ describe(`Interests endpoints`, () => {
                 .set('Authorization', helpers.makeAuthHeader(testUser))
                 .send(newInterest)
                 .expect(200)
-        })
-    })
+        });
+    });
 
     describe(`DELETE /api/interests/:id`, () => {
-        beforeEach('insert users', () => 
+        beforeEach('insert users', () =>
             helpers.seedUsers(
-                db, 
+                db,
                 testUsers
             )
-        )
+        );
 
-        beforeEach('insert categories', () => 
+        beforeEach('insert categories', () =>
             helpers.seedCategories(
                 db,
                 testCategories
             )
-        )
+        );
 
-        beforeEach('insert interests', () => 
+        beforeEach('insert interests', () =>
             helpers.seedUserInterests(
                 db,
                 testInterests
             )
-        )
+        );
 
         it('deletes interest responds with 204', () => {
             return supertest(app)
                 .delete('/api/interests/1')
                 .expect(204)
-        })
-    })
-})
+        });
+    });
+});

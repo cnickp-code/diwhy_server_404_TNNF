@@ -17,9 +17,9 @@ describe('Categories Endpoints', () => {
         db = knex({
             client: 'pg',
             connection: process.env.TEST_DATABASE_URL
-        })
-        app.set('db', db)
-    })
+        });
+        app.set('db', db);
+    });
 
     before('clean db', () => helpers.cleanTables(db));
     afterEach('clean db', () => helpers.cleanTables(db));
@@ -36,25 +36,23 @@ describe('Categories Endpoints', () => {
             beforeEach('Insert categories', () => {
                 return db
                     .into('categories')
-                    .insert(testCategories)
-            })
+                    .insert(testCategories);
+            });
 
             it('Should return 200 and test data', () => {
-            return supertest(app)
-                .get('/api/categories')
-                .expect(200, testCategories)
-            })
-        })
-
-
-    })
+                return supertest(app)
+                    .get('/api/categories')
+                    .expect(200, testCategories);
+            });
+        });
+    });
 
     describe('GET /api/categories/:category_id', () => {
         beforeEach('Insert categories', () => {
             return db
                 .into('categories')
-                .insert(testCategories)
-        })
+                .insert(testCategories);
+        });
 
         it('Responds with 200 and given category', () => {
             const categoryId = 1;
@@ -62,7 +60,7 @@ describe('Categories Endpoints', () => {
 
             return supertest(app)
                 .get(`/api/categories/${categoryId}`)
-                .expect(200, expectedCategory)
-        })
-    })
-})
+                .expect(200, expectedCategory);
+        });
+    });
+});

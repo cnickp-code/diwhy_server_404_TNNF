@@ -1,28 +1,28 @@
-const express = require('express')
-const CommentsService = require('./comments-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const express = require('express');
+const CommentsService = require('./comments-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
-const commentsRouter = express.Router()
-const jsonBodyParser = express.json()
+const commentsRouter = express.Router();
+const jsonBodyParser = express.json();
 
 commentsRouter
     .route('/')
     .all(requireAuth)
     .post(jsonBodyParser, async (req, res, next) => {
         try {
-            const { content, thread_id, user_id, date_created } = req.body
-            const newComment = { content, thread_id, user_id, date_created }
+            const { content, thread_id, user_id, date_created } = req.body;
+            const newComment = { content, thread_id, user_id, date_created };
 
             const insertComment = await CommentsService.insertComment(
                 req.app.get('db'),
                 newComment
-            )
+            );
 
-            res.status(201).json(CommentsService.serializeComment(insertComment))
+            res.status(201).json(CommentsService.serializeComment(insertComment));
         } catch (error) {
             next(error)
-        }
-    })
+        };
+    });
 
 commentsRouter
     .route('/thread/:thread')
@@ -32,24 +32,24 @@ commentsRouter
             const threadComments = await CommentsService.getCommentsByThread(
                 req.app.get('db'),
                 req.params.thread
-            )
+            );
 
             let newComments = threadComments.map(comment => {
                 return CommentsService.serializeComment(comment);
-            })
+            });
 
 
-            res.status(200).json(newComments)
+            res.status(200).json(newComments);
         } catch (error) {
-            next(error)
-        }
-    })
+            next(error);
+        };
+    });
 
 commentsRouter
     .route('/:comment_id')
     .all(requireAuth)
     .all((req, res, next) => {
-        const knex = req.app.get('db')
+        const knex = req.app.get('db');
         const { comment_id } = req.params;
 
         CommentsService.getCommentById(knex, comment_id)
@@ -57,12 +57,12 @@ commentsRouter
                 if (!comment) {
                     return res.status(404).json({
                         error: { message: `Comment does not exist` }
-                    })
-                }
+                    });
+                };
                 res.comment = comment;
                 next();
             })
-            .catch(next)
+            .catch(next);
     })
     .get((req, res, next) => {
         res.status(200).json(CommentsService.serializeComment(res.comment));
@@ -72,29 +72,29 @@ commentsRouter
             await CommentsService.deleteComment(
                 req.app.get('db'),
                 req.params.comment_id
-            )
-            res.status(204).end()
+            );
+            res.status(204).end();
         } catch (error) {
-            next(error)
-        }
+            next(error);
+        };
     })
 
     .patch(jsonBodyParser, async (req, res, next) => {
         try {
-            const { content } = req.body
+            const { content } = req.body;
             await CommentsService.updateComment(
                 req.app.get('db'),
                 req.params.comment_id,
                 { content: content }
-            )
+            );
             const updatedComments = await CommentsService.getCommentById(
                 req.app.get('db'),
                 req.params.comment_id
-            )
-            res.status(202).json(CommentsService.serializeComment(updatedComments))
+            );
+            res.status(202).json(CommentsService.serializeComment(updatedComments));
         } catch (error) {
-            next(error)
-        }
-    })
+            next(error);
+        };
+    });
 
 module.exports = commentsRouter

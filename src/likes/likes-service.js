@@ -1,15 +1,9 @@
 const LikesService = {
-    // getLikesByThreadId(db, thread_id) {
-    //     return db
-    //         .count('*')
-    //         .from('likes')
-    //         .where({ thread_id })
-    // },
     getLikesByThreadId(db, thread_id) {
         return db
             .select('*')
             .from('likes')
-            .where({ thread_id })
+            .where({ thread_id });
     },
     insertLikes(db, newLike) {
         return db
@@ -27,8 +21,8 @@ const LikesService = {
                 user_id,
                 thread_id
             })
-            .delete()
+            .delete();
     }
-}
+};
 
-module.exports = LikesService;
+module.exports = LikesService

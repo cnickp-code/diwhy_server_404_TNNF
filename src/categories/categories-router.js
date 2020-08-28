@@ -15,11 +15,11 @@ categoriesRouter
             .then(categories => {
                 const serializedCategories = categories.map(category => {
                     return CategoriesService.serializeCategoryItem(category);
-                })
+                });
 
                 res.status(200).json(serializedCategories);
-            })
-    })
+            });
+    });
 
 categoriesRouter
     .route('/:category_id')
@@ -28,14 +28,13 @@ categoriesRouter
 
         CategoriesService.getCategoryById(knexInstance, req.params.category_id)
             .then(category => {
-                if(!category) {
+                if (!category) {
                     return res.status(404).json({
                         error: { message: 'Item does not exist.' }
-                    })
-                }
+                    });
+                };
                 res.status(200).json(CategoriesService.serializeCategoryItem(category));
-            })
-        
-    })
+            });
+    });
 
-module.exports = categoriesRouter;
+module.exports = categoriesRouter
