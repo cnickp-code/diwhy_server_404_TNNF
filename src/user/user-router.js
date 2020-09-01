@@ -70,11 +70,9 @@ userRouter
     .get((req, res, next) => {
         const knex = req.app.get('db')
         const { user_name } = req.params;
-        console.log(user_name)
 
         UserService.getUserInfo(knex, user_name)
             .then(user => {
-                console.log(user)
                 res
                     .status(200)
                     .json(UserService.serializeUser(user))
@@ -96,7 +94,6 @@ userRouter
             email
         }
 
-        console.log(updatedUser);
 
         UserService.updateUserInfoById(knex, id, updatedUser)
             .then(user => {
