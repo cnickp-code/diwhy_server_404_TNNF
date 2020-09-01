@@ -15,15 +15,15 @@ describe('Applicants endpoints', () => {
     const validUser = testUsers[0];
 
     before('make knex instance', () => {
-        db = helpers.makeKnexInstance()
-        app.set('db', db)
-    })
+        db = helpers.makeKnexInstance();
+        app.set('db', db);
+    });
 
-    after('disconnect from db', () => db.destroy())
+    after('disconnect from db', () => db.destroy());
 
-    before('cleanup', () => helpers.cleanTables(db))
+    before('cleanup', () => helpers.cleanTables(db));
 
-    afterEach('cleanup', () => helpers.cleanTables(db))
+    afterEach('cleanup', () => helpers.cleanTables(db));
 
 
     describe(`GET /api/applicants/postings/:posting_id`, () => {
@@ -34,24 +34,24 @@ describe('Applicants endpoints', () => {
                 testPostings,
                 testUsers,
                 testCategories,
-            )
-        })
+            );
+        });
 
         it('responds 200 with all applicants for that posting', () => {
-            let postingId = 1; 
+            let postingId = 1;
             let expectedApplicants = testApplicants.filter(app => app.posting_id === postingId);
             expectedApplicants = expectedApplicants.map(app => {
-                let user = testUsers.find(user => user.id === app.applicant_id)
+                let user = testUsers.find(user => user.id === app.applicant_id);
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
                     user_name: user.user_name
-                }
+                };
 
                 let newObj = {
                     ...app,
                     user: newUser
-                }
+                };
 
                 delete newObj['applicant_id'];
 
@@ -61,9 +61,10 @@ describe('Applicants endpoints', () => {
             return supertest(app)
                 .get(`/api/applicants/postings/${postingId}`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
-                .expect(200, expectedApplicants)
-        })
-    })
+                .expect(200, expectedApplicants);
+        });
+    });
+
     describe(`GET /api/applicants/user/:user_id`, () => {
         beforeEach('seed tables', () => {
             return helpers.seedApplicants(
@@ -72,8 +73,8 @@ describe('Applicants endpoints', () => {
                 testPostings,
                 testUsers,
                 testCategories,
-            )
-        })
+            );
+        });
 
         it(`Responds with 200 and given data`, () => {
             let userId = 1;
@@ -85,24 +86,24 @@ describe('Applicants endpoints', () => {
                     email: user.email,
                     endorsements: 0,
                     user_name: user.user_name
-                }
+                };
 
                 let newObj = {
                     ...app,
                     user: newUser
-                }
+                };
 
                 delete newObj['applicant_id'];
 
                 return newObj;
-            })
+            });
 
             return supertest(app)
                 .get(`/api/applicants/user/${userId}`)
                 .set('Authorization', helpers.makeAuthHeader(validUser))
-                .expect(200, expectedApplications)
-        })
-    })
+                .expect(200, expectedApplications);
+        });
+    });
 
     describe(`POST /api/applicants`, () => {
         beforeEach('seed tables', () => {
@@ -112,8 +113,8 @@ describe('Applicants endpoints', () => {
                 testPostings,
                 testUsers,
                 testCategories,
-            )
-        })
+            );
+        });
 
         it('Responds with 201 and inserted application', () => {
             let newApp = {
@@ -123,27 +124,27 @@ describe('Applicants endpoints', () => {
                 posting_id: 2
             };
 
-            let expectedApps = testApplicants.filter(app => app.posting_id === newApp.posting_id)
+            let expectedApps = testApplicants.filter(app => app.posting_id === newApp.posting_id);
 
-            expectedApps.push(newApp)
+            expectedApps.push(newApp);
 
             expectedApps = expectedApps.map(app => {
-                let user = testUsers.find(user => user.id === app.applicant_id)
+                let user = testUsers.find(user => user.id === app.applicant_id);
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
                     user_name: user.user_name
-                }
+                };
 
                 let newObj = {
                     ...app,
                     user: newUser
-                }
+                };
 
                 delete newObj['applicant_id'];
 
                 return newObj;
-            })
+            });
 
             return supertest(app)
                 .post(`/api/applicants`)
@@ -161,9 +162,9 @@ describe('Applicants endpoints', () => {
                         .get(`/api/applicants/postings/${newApp.posting_id}`)
                         .set('Authorization', helpers.makeAuthHeader(validUser))
                         .expect(200, expectedApps)
-                })
-        })
-    })
+                });
+        });
+    });
 
     describe(`DELETE /api/applicants/:id`, () => {
         beforeEach('seed tables', () => {
@@ -173,35 +174,32 @@ describe('Applicants endpoints', () => {
                 testPostings,
                 testUsers,
                 testCategories,
-            )
-        })
+            );
+        });
 
         it(`Responds 204 for deleted comment`, () => {
             const appId = 1;
             let testApp = testApplicants[appId - 1];
 
-            let expectedApplicants = testApplicants.filter(app => app.id !== appId)
-            expectedApplicants = expectedApplicants.filter(app => app.applicant_id === testApp.applicant_id)
-            
+            let expectedApplicants = testApplicants.filter(app => app.id !== appId);
+            expectedApplicants = expectedApplicants.filter(app => app.applicant_id === testApp.applicant_id);
+
             expectedApplicants = expectedApplicants.map(app => {
                 let user = testUsers.find(user => user.id === app.applicant_id)
                 let newUser = {
                     email: user.email,
                     endorsements: 0,
                     user_name: user.user_name
-                }
+                };
 
                 let newObj = {
                     ...app,
                     user: newUser
-                }
-
+                };
                 delete newObj['applicant_id'];
 
                 return newObj;
-            })
-
-            
+            });
 
             return supertest(app)
                 .delete(`/api/applicants/${appId}`)
@@ -211,9 +209,9 @@ describe('Applicants endpoints', () => {
                     return supertest(app)
                         .get(`/api/applicants/user/${testApp.applicant_id}`)
                         .set('Authorization', helpers.makeAuthHeader(validUser))
-                        .expect(200, expectedApplicants)
-                })
-        })
-    })
-})
+                        .expect(200, expectedApplicants);
+                });
+        });
+    });
+});
 

@@ -3,7 +3,7 @@ const CommentLikesService = {
         return db
             .select('*')
             .from('comment_likes')
-            .where({ comment_id })
+            .where({ comment_id });
     },
     insertCommentLikes(db, newLike) {
         return db
@@ -11,7 +11,7 @@ const CommentLikesService = {
             .into('comment_likes')
             .returning('*')
             .then(rows => {
-                return rows[0]
+                return rows[0];
             });
     },
     deleteCommentLike(db, user_id, comment_id) {
@@ -21,8 +21,8 @@ const CommentLikesService = {
                 user_id,
                 comment_id
             })
-            .delete()
+            .delete();
     }
-}
+};
 
-module.exports = CommentLikesService;
+module.exports = CommentLikesService

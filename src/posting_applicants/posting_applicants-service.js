@@ -6,7 +6,7 @@ const PostingApplicantsService = {
             .from('posting_applicants')
             .join('users', 'users.id', 'applicant_id')
             .select('posting_applicants.id AS application_id')
-            .where('applicant_id', user_id)
+            .where('applicant_id', user_id);
     },
     getPostingApplicationById(db, id) {
         return db
@@ -14,7 +14,7 @@ const PostingApplicantsService = {
             .from('posting_applicants')
             .join('users', 'users.id', 'applicant_id')
             .select('posting_applicants.id AS application_id')
-            .where('application_id', id)
+            .where('application_id', id);
     },
     getByPostingId(db, posting_id) {
         return db
@@ -22,7 +22,7 @@ const PostingApplicantsService = {
             .from('posting_applicants')
             .join('users', 'users.id', 'applicant_id')
             .select('posting_applicants.id AS application_id')
-            .where({ posting_id })
+            .where({ posting_id });
     },
     insertPostingApplicant(db, newApplicant) {
         return db
@@ -30,13 +30,13 @@ const PostingApplicantsService = {
             .into('posting_applicants')
             .returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
     deletePostingApplicant(db, id) {
         return db('posting_applicants')
             .where({ id })
-            .delete()
+            .delete();
     },
     serializeApplicationDetails(application) {
         return {
@@ -48,17 +48,14 @@ const PostingApplicantsService = {
                 email: application.email,
                 endorsements: application.endorsements
             }
-        }
+        };
     },
-    // serializeApplicantDetails(applicant) {
-
-    // },
     hasApplicant(db, applicant_id, posting_id) {
         return db('posting_applicants')
-            .where({ posting_id, applicant_id})
+            .where({ posting_id, applicant_id })
             .first()
-            .then(applicant => !!applicant)
+            .then(applicant => !!applicant);
     }
-}
+};
 
-module.exports = PostingApplicantsService;
+module.exports = PostingApplicantsService

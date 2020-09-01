@@ -1,25 +1,25 @@
-require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const helmet = require('helmet')
-const { NODE_ENV } = require('./config')
-const userRouter = require('./user/user-router')
-const authRouter = require('./auth/auth-router')
-const interestsRouter = require('./user_interests/user_interests-router')
-const categoriesRouter = require('./categories/categories-router')
-const threadsRouter = require('./threads/threads-router')
-const commentsRouter = require('./comments/comments-router')
-const postingsRouter = require('./postings/postings-router')
-const likesRouter = require('./likes/likes-router')
-const commentLikesRouter = require('./comment_likes/comment_likes-router')
-const postingApplicantsRouter = require('./posting_applicants/posting_applicants-router')
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
+const { NODE_ENV } = require('./config');
+const userRouter = require('./user/user-router');
+const authRouter = require('./auth/auth-router');
+const interestsRouter = require('./user_interests/user_interests-router');
+const categoriesRouter = require('./categories/categories-router');
+const threadsRouter = require('./threads/threads-router');
+const commentsRouter = require('./comments/comments-router');
+const postingsRouter = require('./postings/postings-router');
+const likesRouter = require('./likes/likes-router');
+const commentLikesRouter = require('./comment_likes/comment_likes-router');
+const postingApplicantsRouter = require('./posting_applicants/posting_applicants-router');
 
 const app = express()
 
 const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
-  : 'common';
+    ? 'tiny'
+    : 'common'
 
 app.use(morgan(morganOption))
 app.use(helmet())

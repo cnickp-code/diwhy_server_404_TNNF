@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express');
 const ThreadsService = require('./threads-service');
 
 const threadsRouter = express.Router();
@@ -11,17 +11,16 @@ threadsRouter
     .all(requireAuth)
     .get((req, res, next) => {
         const knex = req.app.get('db');
-        
+
         ThreadsService.getAllThreads(knex)
             .then(threads => {
                 const newThreads = threads.map(thread => {
                     return ThreadsService.serializeThread(thread);
-                })
-
+                });
                 res.status(200).json(newThreads);
-            })
+            });
     })
-    .post(bodyParser, (req, res,next) => {
+    .post(bodyParser, (req, res, next) => {
         const knex = req.app.get('db');
         const { title, category, date_created, content } = req.body;
         const user_id = req.user.id;
@@ -31,25 +30,23 @@ threadsRouter
             date_created,
             content,
             user_id
-        }
+        };
 
-        for(const [key, value] of Object.entries(newThread)) {
-            if(value == null) {
+        for (const [key, value] of Object.entries(newThread)) {
+            if (value == null) {
                 return res.status(404).json({
-                    error: { message: `Missing '${key}' in request body`}
-                })
-            }
-        }
+                    error: { message: `Missing '${key}' in request body` }
+                });
+            };
+        };
 
         ThreadsService.insertThread(knex, newThread)
             .then(thread => {
-                
-                res
-                    .status(201)
+                res.status(201)
                     .location(`/api/schedule/${thread.id}`)
                     .json(ThreadsService.serializeThread(newThread))
-            })
-    })
+            });
+    });
 
 threadsRouter
     .route('/:thread_id')
@@ -60,21 +57,21 @@ threadsRouter
 
         ThreadsService.getThreadById(knex, thread_id)
             .then(thread => {
-                if(!thread) {
+                if (!thread) {
                     return res.status(404).json({
-                        error: { message: `Thread does not exist`}
+                        error: { message: `Thread does not exist` }
                     })
-                }
+                };
                 res.thread = thread;
                 next();
             })
-            .catch(next)
+            .catch(next);
     })
     .get((req, res, next) => {
         res.status(200).json(ThreadsService.serializeThread(res.thread));
     })
     .delete(bodyParser, (req, res, next) => {
-        const knex = req.app.get('db')
+        const knex = req.app.get('db');
 
         ThreadsService.deleteThread(knex, req.params.thread_id)
             .then(() => {
@@ -83,7 +80,7 @@ threadsRouter
             .catch(next);
     })
     .patch(bodyParser, (req, res, next) => {
-        const knex = req.app.get('db')
+        const knex = req.app.get('db');
         const { title, user_id, category, date_created, content } = req.body;
         const { thread_id } = req.params;
 
@@ -93,14 +90,14 @@ threadsRouter
             category,
             date_created,
             content
-        }
+        };
 
         ThreadsService.updateThread(knex, thread_id, updatedThread)
             .then(() => {
                 res.status(202).end();
             })
             .catch(next);
-    })
+    });
 
 threadsRouter
     .route('/category/:category_id')
@@ -113,13 +110,12 @@ threadsRouter
             .then(threads => {
                 const newThreads = threads.map(thread => {
                     return ThreadsService.serializeThread(thread);
-                })
+                });
 
-                res
-                    .status(200)
-                    .json(newThreads)
-            })
-    })
+                res.status(200)
+                    .json(newThreads);
+            });
+    });
 
 threadsRouter
     .route('/user/:user_id')
@@ -132,12 +128,11 @@ threadsRouter
             .then(threads => {
                 const newThreads = threads.map(thread => {
                     return ThreadsService.serializeThread(thread);
-                })
-                
-                res
-                    .status(200)
-                    .json(newThreads)
-            })
-    })
+                });
+
+                res.status(200)
+                    .json(newThreads);
+            });
+    });
 
 module.exports = threadsRouter

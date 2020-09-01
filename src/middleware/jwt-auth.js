@@ -1,5 +1,5 @@
-const { JsonWebTokenError } = require('jsonwebtoken')
-const AuthService = require('../auth/auth-service')
+const { JsonWebTokenError } = require('jsonwebtoken');
+const AuthService = require('../auth/auth-service');
 
 async function requireAuth(req, res, next) {
     const authToken = req.get('Authorization') || ''
@@ -8,7 +8,7 @@ async function requireAuth(req, res, next) {
     if (!authToken.toLowerCase().startsWith('bearer ')) {
         return res.status(401).json({ error: 'Missing bearer token' })
     } else {
-        bearerToken = authToken.slice(7, authToken.length)
+        bearerToken = authToken.slice(7, authToken.length);
     }
 
     try {
@@ -22,7 +22,6 @@ async function requireAuth(req, res, next) {
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized request' })
         }
-        
 
         req.user = user
         next()
@@ -30,12 +29,8 @@ async function requireAuth(req, res, next) {
         if (error instanceof JsonWebTokenError) {
             return res.status(401).json({ error: 'Unauthorized request' })
         }
-            
-
         next(error)
     }
 }
 
-module.exports = {
-    requireAuth,
-}
+module.exports = { requireAuth }
